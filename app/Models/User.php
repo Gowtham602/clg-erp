@@ -51,4 +51,9 @@ use SoftDeletes;
     {
         return $this->hasOne(TeacherDetail::class);
     }
+
+ public function subjects()
+{
+    return $this->belongsToMany(Subject::class, 'subject_teacher', 'teacher_id', 'subject_id');
+}
 }

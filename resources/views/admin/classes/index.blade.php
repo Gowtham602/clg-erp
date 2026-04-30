@@ -17,6 +17,7 @@
         <table id="classTable" class="table table-striped table-hover w-100">
             <thead class="table-dark">
                 <tr>
+                    <th>SNo</th>
                     <th>Name</th>
                     <th>Section</th>
                     <th>Teacher</th>
@@ -40,6 +41,14 @@ $(document).ready(function () {
         ajax: "{{ route('classes.data') }}",
 
         columns: [
+         {
+            data: null,
+            orderable: false,
+            searchable: false,
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
             { data: 'name' },
             { data: 'section' },
             { data: 'teacher' },

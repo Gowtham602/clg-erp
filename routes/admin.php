@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\DashBoardController;
+use App\Http\Controllers\Admin\SubjectController;
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -45,6 +46,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('classes', ClassController::class);
     Route::get('classes-data', [ClassController::class, 'data'])
         ->name('classes.data');
+
+
+    //subject 
+    Route::resource('subjects', SubjectController::class);
+    Route::get('subjects-data',[SubjectController::class, 'data'])->name('subjects-data');
 
 });
 

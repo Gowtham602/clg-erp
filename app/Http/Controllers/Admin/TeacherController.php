@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Subject;
 use App\Models\TeacherDetail;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -138,6 +139,19 @@ public function restore($id)
     return response()->json([
         'message' => 'Teacher restored successfully'
     ]);
+}
+
+public function mySubjects()
+{
+    $teacherId = auth()->id();
+
+    $subjects = Subject::with('class')
+        ->whereHas('teachers', function ($q) use ($teacherId) {
+            $q->where('users.id', $teacherId);
+        })
+        ->get();
+
+    return view('teacher.subjects', compact('subjects'));
 }
 
 }

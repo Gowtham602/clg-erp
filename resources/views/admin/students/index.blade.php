@@ -10,6 +10,7 @@
 <table class="table" id="studentTable">
     <thead>
         <tr>
+            <th>S No</th>
             <th>Name</th>
             <th>Father</th>
             <th>Phone</th>
@@ -32,6 +33,14 @@ $('#studentTable').DataTable({
     serverSide: true,
     ajax: "{{ route('students.data') }}",
     columns: [
+        {
+            data: null,
+            orderable: false,
+            searchable: false,
+            render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+            }
+        },
         {data: 'name'},
         {data: 'father_name'},
         {data: 'phone'},

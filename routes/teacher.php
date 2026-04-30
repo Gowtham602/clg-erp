@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Teacher\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Teacher\StudentController;
 
@@ -21,4 +23,9 @@ Route::get('/dashboard', function () {
     Route::put('students/{id}', [StudentController::class, 'update'])->name('teacher.students.update');
     Route::delete('students/{id}', [StudentController::class, 'destroy'])->name('teacher.students.delete');
 
+
+
+
+    //teacher mapping  subject list  in dashboard
+    Route::get('/teacher-subject',[DashboardController::class,'teacherSubjects'])->name('teacher-subject');
 });
