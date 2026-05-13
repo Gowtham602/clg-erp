@@ -1,67 +1,174 @@
 <?php
 
-namespace App\Http\Controllers\admin;
-
-
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Student;
 use App\Models\ClassModel;
 use App\Models\StudentHistory;
-use DB;
+use App\Models\StudentAcademic;
+use Illuminate\Support\Facades\DB;
 
 class PromotionController extends Controller
 {
-    // public function index()
-    // {
-    //     $classes = ClassModel::all();
-    //     return view('admin.promotion.index', compact('classes'));
-    // }
-    public function index()
-{
-    $classes = ClassModel::all();
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
 
-    $histories = StudentHistory::with('student', 'class')
+    public function index()
+    {
+        $classes = ClassModel::with('sections')->get();
+
+        $histories = StudentHistory::with([
+
+            'student',
+            'fromSection.classModel',
+            'toSection.classModel'
+
+        ])
         ->latest()
-        ->limit(10) // show recent 10
+        ->limit(10)
         ->get();
 
-    return view('admin.promotion.index', compact('classes','histories'));
-}
+        return view(
+            'admin.promotion.index',
+            compact('classes', 'histories')
+        );
+    }
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROMOTE STUDENTS
+    |--------------------------------------------------------------------------
+    */
 
     public function promote(Request $request)
     {
         $request->validate([
-            'from_class' => 'required',
-            'to_class'   => 'required|different:from_class',
+
+            'from_section' => 'required|exists:sections,id',
+
+            'to_section' =>
+                'required|exists:sections,id|different:from_section',
+
+            'academic_year' => 'required',
+
+            'new_academic_year' => 'required',
         ]);
 
-        $fromClass = $request->from_class;
-        $toClass   = $request->to_class;
 
-        $year = now()->year . '-' . (now()->year + 1);
+        DB::beginTransaction();
 
-        DB::transaction(function () use ($fromClass, $toClass, $year) {
+        try {
 
-            $students = Student::where('class_id', $fromClass)->get();
+            /*
+            |--------------------------------------------------------------------------
+            | GET CURRENT YEAR STUDENTS
+            |--------------------------------------------------------------------------
+            */
 
-            foreach ($students as $student) {
+            $students = StudentAcademic::where(
 
-                //  Save OLD class
-                StudentHistory::create([
-                    'student_id' => $student->id,
-                    'class_id' => $student->class_id,
-                    'academic_year' => $year,
+                    'section_id',
+                    $request->from_section
+
+                )
+                ->where(
+
+                    'academic_year',
+                    $request->academic_year
+
+                )
+                ->where(
+
+                    'status',
+                    'studying'
+
+                )
+                ->get();
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | LOOP STUDENTS
+            |--------------------------------------------------------------------------
+            */
+
+            foreach ($students as $academic) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | OLD RECORD UPDATE
+                |--------------------------------------------------------------------------
+                */
+
+                $academic->update([
+
+                    'status' => 'promoted'
                 ]);
 
-                //  Update NEW class
-                $student->update([
-                    'class_id' => $toClass
+
+                /*
+                |--------------------------------------------------------------------------
+                | NEW YEAR ENTRY
+                |--------------------------------------------------------------------------
+                */
+
+                StudentAcademic::create([
+
+                    'student_id' => $academic->student_id,
+
+                    'section_id' => $request->to_section,
+
+                    'academic_year' =>
+                        $request->new_academic_year,
+
+                    'roll_no' => $academic->roll_no,
+
+                    'status' => 'studying'
+                ]);
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | HISTORY SAVE
+                |--------------------------------------------------------------------------
+                */
+
+                StudentHistory::create([
+
+                    'student_id' => $academic->student_id,
+
+                    'from_section_id' =>
+                        $request->from_section,
+
+                    'to_section_id' =>
+                        $request->to_section,
+
+                    'academic_year' =>
+                        $request->new_academic_year,
                 ]);
             }
-        });
 
-        return back()->with('success', 'Students promoted successfully with history saved');
+
+            DB::commit();
+
+            return back()->with(
+
+                'success',
+                'Students promoted successfully'
+            );
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            dd($e->getMessage());
+        }
     }
 }

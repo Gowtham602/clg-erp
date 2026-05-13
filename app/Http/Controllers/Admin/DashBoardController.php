@@ -7,17 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\ClassModel;
+use App\Models\Section;
 
 class DashBoardController extends Controller
 {
-    
-
- public function index()
+    public function index()
     {
         $students = Student::count();
+
         $teachers = User::where('role', 'teacher')->count();
+
         $classes = ClassModel::count();
-        $sections = ClassModel::distinct('section')->count('section');
+
+        $sections = Section::count();
 
         $recentStudents = Student::latest()->take(5)->get();
 
@@ -28,5 +30,5 @@ class DashBoardController extends Controller
             'sections',
             'recentStudents'
         ));
-}
+    }
 }

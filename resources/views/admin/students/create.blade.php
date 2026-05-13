@@ -102,6 +102,25 @@
                         <div class="invalid-feedback"></div>
 
                     </div>
+                    <div class="col-md-4 mb-3">
+
+                        <label>Academic Year</label>
+
+                        <select name="academic_year" class="form-control">
+
+                            <option value="">Select Year</option>
+
+                            <option value="2025-2026">
+                                2025-2026
+                            </option>
+
+                            <option value="2026-2027">
+                                2026-2027
+                            </option>
+
+                        </select>
+
+                    </div>
 
 
                     <!-- First Name -->
@@ -218,7 +237,7 @@
 
 
                     <!-- Father -->
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
 
                         <label class="form-label">
                             Father Name
@@ -234,7 +253,7 @@
 
 
                     <!-- Mother -->
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
 
                         <label class="form-label">
                             Mother Name
@@ -320,72 +339,76 @@ $(document).ready(function () {
     | FORM SUBMIT
     |--------------------------------------------------------------------------
     */
+$('#studentForm').submit(function (e) {
 
-    $('#studentForm').submit(function (e) {
+    e.preventDefault();
 
-        e.preventDefault();
+    let form = this;
 
-        let form = $(this);
+    $('.is-invalid').removeClass('is-invalid');
 
-        $('.is-invalid').removeClass('is-invalid');
+    $('.invalid-feedback').html('');
 
-        $('.invalid-feedback').html('');
+    $.ajax({
 
-        $.ajax({
+        url: $(form).attr('action'),
 
-            url: form.attr('action'),
+        type: 'POST',
 
-            type: 'POST',
+        data: new FormData(form),
 
-            data: form.serialize(),
+        processData: false,
 
-            success: function (response) {
+        contentType: false,
 
-                Swal.fire({
+        success: function (response) {
 
-                    icon:'success',
+            Swal.fire({
 
-                    title:'Success',
+                icon:'success',
 
-                    text:response.message,
+                title:'Success',
 
-                    timer:1500,
+                text:response.message,
 
-                    showConfirmButton:false
+                timer:1500,
+
+                showConfirmButton:false
+            });
+
+            setTimeout(function(){
+
+                window.location.href =
+                    "{{ route('students.index') }}";
+
+            },1500);
+        },
+
+        error: function (xhr) {
+
+            console.log(xhr.responseText);
+
+            if (xhr.status === 422) {
+
+                let errors =
+                    xhr.responseJSON.errors;
+
+                $.each(errors, function (field, messages) {
+
+                    let input =
+                        $('[name="' + field + '"]');
+
+                    input.addClass('is-invalid');
+
+                    input
+                        .closest('.mb-3')
+                        .find('.invalid-feedback')
+                        .html(messages[0]);
                 });
-
-                setTimeout(function(){
-
-                    window.location.href =
-                        "{{ route('students.index') }}";
-
-                },1500);
-            },
-
-            error: function (xhr) {
-
-                if (xhr.status === 422) {
-
-                    let errors =
-                        xhr.responseJSON.errors;
-
-                    $.each(errors, function (field, messages) {
-
-                        let input =
-                            $('[name="' + field + '"]');
-
-                        input.addClass('is-invalid');
-
-                        input
-                            .closest('.mb-3')
-                            .find('.invalid-feedback')
-                            .html(messages[0]);
-                    });
-                }
             }
-        });
+        }
     });
-
+});
 
 
 

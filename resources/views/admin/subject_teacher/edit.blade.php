@@ -2,13 +2,22 @@
 
 @section('content')
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
-    <div class="card shadow">
+    <div class="card shadow border-0">
 
-        <div class="card-header">
-            <h4>Edit Subject Teacher</h4>
+        {{-- HEADER --}}
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+                Edit Subject Teacher Mapping
+            </h5>
+
         </div>
+
+
+        {{-- BODY --}}
 
         <div class="card-body">
 
@@ -18,14 +27,56 @@
                 @method('PUT')
 
 
-                <!-- SUBJECT -->
+                {{-- CLASS --}}
 
                 <div class="mb-3">
 
-                    <label>Subject</label>
+                    <label class="form-label">
+                        Class
+                    </label>
 
-                    <select name="subject_id"
-                            class="form-control">
+                    <select
+                        id="class_id"
+                        class="form-select">
+
+                        <option value="">
+                            Select Class
+                        </option>
+
+                        @foreach($classes as $class)
+
+                        <option
+                            value="{{ $class->id }}"
+                            {{ $classId == $class->id ? 'selected' : '' }}>
+
+                            {{ $class->name }}
+
+                        </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+
+
+                {{-- SUBJECT --}}
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Subject
+                    </label>
+
+                    <select
+                        name="subject_id"
+                        id="subject_id"
+                        class="form-select">
+
+                        <option value="">
+                            Select Subject
+                        </option>
 
                         @foreach($subjects as $subject)
 
@@ -41,19 +92,28 @@
 
                     </select>
 
+                    <small class="text-danger error_subject_id"></small>
+
                 </div>
 
 
 
-
-                <!-- SECTION -->
+                {{-- SECTION --}}
 
                 <div class="mb-3">
 
-                    <label>Section</label>
+                    <label class="form-label">
+                        Section
+                    </label>
 
-                    <select name="section_id"
-                            class="form-control">
+                    <select
+                        name="section_id"
+                        id="section_id"
+                        class="form-select">
+
+                        <option value="">
+                            Select Section
+                        </option>
 
                         @foreach($sections as $section)
 
@@ -61,8 +121,6 @@
                             value="{{ $section->id }}"
                             {{ $subjectTeacher->section_id == $section->id ? 'selected' : '' }}>
 
-                            {{ $section->classModel->name }}
-                            -
                             {{ $section->name }}
 
                         </option>
@@ -71,19 +129,28 @@
 
                     </select>
 
+                    <small class="text-danger error_section_id"></small>
+
                 </div>
 
 
 
-
-                <!-- TEACHER -->
+                {{-- TEACHER --}}
 
                 <div class="mb-3">
 
-                    <label>Teacher</label>
+                    <label class="form-label">
+                        Teacher
+                    </label>
 
-                    <select name="teacher_id"
-                            class="form-control">
+                    <select
+                        name="teacher_id"
+                        id="teacher_id"
+                        class="form-select">
+
+                        <option value="">
+                            Select Teacher
+                        </option>
 
                         @foreach($teachers as $teacher)
 
@@ -99,17 +166,29 @@
 
                     </select>
 
+                    <small class="text-danger error_teacher_id"></small>
+
                 </div>
 
 
 
+                {{-- BUTTON --}}
 
-                <button type="submit"
-                        class="btn btn-success">
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                    id="updateBtn">
 
                     Update
 
                 </button>
+
+                <a href="{{ route('subject-teacher.index') }}"
+                   class="btn btn-secondary">
+
+                    Back
+
+                </a>
 
             </form>
 
@@ -128,42 +207,166 @@
 
 <script>
 
-$('#editForm').submit(function(e){
+$(document).ready(function () {
 
-    e.preventDefault();
+    // SELECT2
 
-    $.ajax({
+    $('#teacher_id').select2({
+        theme: 'bootstrap-5',
+        width: '100%'
+    });
 
-        url: "{{ route('subject-teacher.update',$subjectTeacher->id) }}",
 
-        type: "POST",
+    // CLASS CHANGE
 
-        data: $(this).serialize(),
+    $('#class_id').change(function () {
 
-        success:function(res){
+        let classId = $(this).val();
 
-            Swal.fire({
+        if(classId == '') {
 
-                icon: 'success',
+            $('#subject_id').html(
+                '<option value="">Select Subject</option>'
+            );
 
-                title: 'Success',
+            $('#section_id').html(
+                '<option value="">Select Section</option>'
+            );
 
-                text: 'Updated Successfully',
-
-                timer: 2000,
-
-                showConfirmButton: false
-
-            });
-
-            setTimeout(function(){
-
-                window.location.href =
-                "{{ route('subject-teacher.index') }}";
-
-            },2000);
-
+            return;
         }
+
+
+        // LOAD SUBJECTS
+
+        $.ajax({
+
+            url: "{{ route('get.subjects', ':id') }}"
+                    .replace(':id', classId),
+
+            type: 'GET',
+
+            success: function (subjects) {
+
+                let option =
+                    '<option value="">Select Subject</option>';
+
+                subjects.forEach(function (subject) {
+
+                    option += `
+                        <option value="${subject.id}">
+                            ${subject.name}
+                        </option>
+                    `;
+                });
+
+                $('#subject_id').html(option);
+
+            }
+
+        });
+
+
+        // LOAD SECTIONS
+
+        $.ajax({
+
+            url: "{{ route('get.sections', ':id') }}"
+                    .replace(':id', classId),
+
+            type: 'GET',
+
+            success: function (sections) {
+
+                let option =
+                    '<option value="">Select Section</option>';
+
+                sections.forEach(function (section) {
+
+                    option += `
+                        <option value="${section.id}">
+                            ${section.name}
+                        </option>
+                    `;
+                });
+
+                $('#section_id').html(option);
+
+            }
+
+        });
+
+    });
+
+
+
+    // UPDATE
+
+    $('#editForm').submit(function (e) {
+
+        e.preventDefault();
+
+        $('.text-danger').text('');
+
+        $('#updateBtn').html('Updating...');
+
+        $.ajax({
+
+            url: "{{ route('subject-teacher.update', $subjectTeacher->id) }}",
+
+            type: "POST",
+
+            data: $(this).serialize(),
+
+            success: function (response) {
+
+                $('#updateBtn').html('Update');
+
+                Swal.fire({
+
+                    icon: 'success',
+
+                    title: 'Updated Successfully',
+
+                    timer: 1500,
+
+                    showConfirmButton: false
+
+                });
+
+                setTimeout(function () {
+
+                    window.location.href =
+                        "{{ route('subject-teacher.index') }}";
+
+                }, 1500);
+
+            },
+
+            error: function (xhr) {
+
+                $('#updateBtn').html('Update');
+
+                let errors = xhr.responseJSON.errors;
+
+                if(errors.subject_id){
+                    $('.error_subject_id')
+                        .text(errors.subject_id[0]);
+                }
+
+                if(errors.section_id){
+                    $('.error_section_id')
+                        .text(errors.section_id[0]);
+                }
+
+                if(errors.teacher_id){
+                    $('.error_teacher_id')
+                        .text(errors.teacher_id[0]);
+                }
+
+            }
+
+        });
 
     });
 

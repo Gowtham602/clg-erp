@@ -89,7 +89,13 @@
 
 
         <!-- PROMOTION -->
-        <a href="{{ route('promotion.index') }}"
+        <!-- <a href="{{ route('promotion.index') }}"
+           class="sidebar-link {{ request()->routeIs('promotion.*') ? 'active' : '' }}">
+
+            <i class="bi bi-arrow-up-circle me-2"></i>
+            Promotion
+        </a> -->
+         <a href="{{ route('student.promotions.index') }}"
            class="sidebar-link {{ request()->routeIs('promotion.*') ? 'active' : '' }}">
 
             <i class="bi bi-arrow-up-circle me-2"></i>

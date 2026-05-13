@@ -73,4 +73,14 @@ class Student extends Model
         return $this->belongsTo(Section::class);
     }
 
+    public function academics()
+    {
+    return $this->hasMany(StudentAcademic::class);
+    }
+    
+    public function currentAcademic()
+    {
+        return $this->hasOne(StudentAcademic::class)
+            ->latestOfMany();
+    }
 }

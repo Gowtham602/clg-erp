@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudentHistory extends Model
 {
     use HasFactory;
-    protected $fillable = ['student_id', 'class_id', 'academic_year'];
+    protected $fillable = ['student_id', 'from_section_id', 'to_section_id', 'academic_year'];
 
      public function student()
     {

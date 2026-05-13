@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\ClassTeacherController;
 use App\Http\Controllers\Admin\SubjectTeacherController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\StudentPromotionController;
 use App\Http\Controllers\Admin\DashBoardController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\PromotionController;
@@ -78,7 +79,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('subject-teacher', SubjectTeacherController::class);
     Route::get('admin/get-subjects/{class_id}', [SubjectTeacherController::class, 'getSubjects'])->name('get-subjects');
+    Route::get('get-subjects/{class_id}',[SubjectTeacherController::class, 'getSubjects'])->name('get.subjects');
 
+    Route::get('get-sections/{class_id}', [SubjectTeacherController::class, 'getSections'] )->name('get.sections');
 
     Route::get('admin/get-sections/{class_id}',[SubjectTeacherController::class, 'getSections'])->name('get-sections');
 
@@ -86,6 +89,19 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     //students promotion to next class 
     Route::get('/admin/promotion', [PromotionController::class, 'index'])->name('promotion.index');
     Route::post('/admin/promotion', [PromotionController::class, 'promote'])->name('promotion.store');
+
+
+    Route::get('student-promotions',
+    [StudentPromotionController::class, 'index'])
+    ->name('student.promotions.index');
+
+Route::post('student-promotions/get-students',
+    [StudentPromotionController::class, 'getStudents'])
+    ->name('student.promotions.getStudents');
+
+Route::post('student-promotions/promote',
+    [StudentPromotionController::class, 'promote'])
+    ->name('student.promotions.promote');
 
 });
 
