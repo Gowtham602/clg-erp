@@ -10,46 +10,114 @@ use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
+
+    // INDEX
+
     public function index()
     {
-        $subjects = Subject::with('classModel')->latest()->get();
+        $classes = ClassModel::with([
 
-        return view('admin.subjects.index', compact('subjects'));
+            'subjects' => function ($query) {
+
+                $query->latest();
+
+            }
+
+        ])->latest()->get();
+
+
+        $totalSubjects = Subject::count();
+
+        $totalClasses = ClassModel::count();
+
+
+        return view(
+            'admin.subjects.index',
+            compact(
+                'classes',
+                'totalSubjects',
+                'totalClasses'
+            )
+        );
     }
 
+
+
+
+    // CREATE
 
     public function create()
     {
         $classes = ClassModel::latest()->get();
 
-        return view('admin.subjects.create', compact('classes'));
+        return view(
+            'admin.subjects.create',
+            compact('classes')
+        );
     }
 
 
-   public function store(Request $request)
-{
-    $request->validate([
-
-        'class_id' => 'required',
-
-        'name' => [ 'required',
-
-            Rule::unique('subjects') ->where(function ($query) use ($request) {
-                    return $query->where(  'class_id',  $request->class_id );
-                })
-        ]
-    ], [  'name.unique' => 'This subject already exists for selected class.' ]);
 
 
-    Subject::create([
-        'name'     => $request->name,
-        'class_id' => $request->class_id,
-    ]);
+    // STORE
 
-    return redirect()
+    public function store(Request $request)
+    {
+        $request->validate([
+
+            'class_id' => 'required|exists:classes,id',
+
+            'name' => [
+
+                'required',
+
+                Rule::unique('subjects')
+                    ->where(function ($query) use ($request) {
+
+                        return $query->where(
+                            'class_id',
+                            $request->class_id
+                        );
+
+                    })
+
+            ]
+
+        ], [
+
+            'class_id.required' => 'Class is required.',
+
+            'class_id.exists' => 'Selected class invalid.',
+
+            'name.required' => 'Subject name is required.',
+
+            'name.unique' =>
+                'This subject already exists for selected class.'
+
+        ]);
+
+
+        Subject::create([
+
+            'class_id' => $request->class_id,
+
+            'name' => trim($request->name)
+
+        ]);
+
+
+        return redirect()
             ->route('subjects.index')
-            ->with('success', 'Subject Added Successfully');
-}
+            ->with(
+                'success',
+                'Subject Added Successfully'
+            );
+    }
+
+
+
+
+    // EDIT
 
     public function edit($id)
     {
@@ -57,68 +125,93 @@ class SubjectController extends Controller
 
         $classes = ClassModel::latest()->get();
 
-        return view('admin.subjects.edit', compact(
-            'subject',
-            'classes'
-        ));
+        return view(
+            'admin.subjects.edit',
+            compact(
+                'subject',
+                'classes'
+            )
+        );
     }
 
 
-   public function update(Request $request, $id)
-{
-    $request->validate([
-
-        'class_id' => 'required',
-
-        'name' => [
-
-            'required',
-
-            Rule::unique('subjects')
-                ->ignore($id)
-                ->where(function ($query) use ($request) {
-
-                    return $query->where(
-                        'class_id',
-                        $request->class_id
-                    );
-
-                })
-
-        ]
-
-    ], [
-
-        'name.unique' => 'This subject already exists for selected class.'
-
-    ]);
 
 
-    $subject = Subject::findOrFail($id);
+    // UPDATE
 
-    $subject->update([
+    public function update(Request $request, $id)
+    {
+        $request->validate([
 
-        'name'     => $request->name,
+            'class_id' => 'required|exists:classes,id',
 
-        'class_id' => $request->class_id,
+            'name' => [
 
-    ]);
+                'required',
+
+                Rule::unique('subjects')
+                    ->ignore($id)
+                    ->where(function ($query) use ($request) {
+
+                        return $query->where(
+                            'class_id',
+                            $request->class_id
+                        );
+
+                    })
+
+            ]
+
+        ], [
+
+            'class_id.required' => 'Class is required.',
+
+            'class_id.exists' => 'Selected class invalid.',
+
+            'name.required' => 'Subject name is required.',
+
+            'name.unique' =>
+                'This subject already exists for selected class.'
+
+        ]);
 
 
-    return redirect()
+        $subject = Subject::findOrFail($id);
+
+        $subject->update([
+
+            'class_id' => $request->class_id,
+
+            'name' => trim($request->name)
+
+        ]);
+
+
+        return redirect()
             ->route('subjects.index')
-            ->with('success', 'Subject Updated Successfully');
-}
+            ->with(
+                'success',
+                'Subject Updated Successfully'
+            );
+    }
 
+
+
+
+    // DELETE
 
     public function destroy($id)
-{
-    $subject = Subject::findOrFail($id);
+    {
+        $subject = Subject::findOrFail($id);
 
-    $subject->delete();
+        $subject->delete();
 
-    return redirect()
+
+        return redirect()
             ->route('subjects.index')
-            ->with('success', 'Subject Deleted Successfully');
-}
+            ->with(
+                'success',
+                'Subject Deleted Successfully'
+            );
+    }
 }

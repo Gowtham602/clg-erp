@@ -2,124 +2,396 @@
 
 @section('content')
 
-<div class="container mt-4">
+<div class="container-fluid py-4">
 
-    <!-- PAGE HEADER -->
+    <!-- HEADER -->
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
 
-        <h4 class="mb-0">
-            Subjects
-        </h4>
+        <div class="card-body bg-primary text-white p-4">
 
-        <a href="{{ route('subjects.create') }}"
-           class="btn btn-primary">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-            <i class="bi bi-plus-circle me-1"></i>
+                <div>
 
-            Add Subject
+                    <h2 class="fw- mb-1">
 
-        </a>
+                        <i class="bi bi-book-half me-2"></i>
+
+                        Subject Management
+
+                    </h2>
+
+                    <p class="mb-0 opacity-75">
+
+                        Manage class subjects professionally
+
+                    </p>
+
+                </div>
+
+
+
+                <a href="{{ route('subjects.create') }}"
+                    class="btn btn-light btn-lg rounded-pill px-4 shadow-sm">
+
+                    <i class="bi bi-plus-circle-fill me-2"></i>
+
+                    Add Subject
+
+                </a>
+
+            </div>
+
+        </div>
 
     </div>
 
 
 
+
+
+    <!-- STATS -->
+
+    <div class="row mb-4">
+
+        <!-- TOTAL SUBJECTS -->
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted text-uppercase fw-semibold">
+
+                            Total Subjects
+
+                        </small>
+
+                        <h2 class="fw-bold mt-2 mb-0">
+
+                            {{ $totalSubjects }}
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-4 p-3">
+
+                        <i class="bi bi-journal-bookmark-fill fs-2"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TOTAL CLASSES -->
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                <div class="card-body d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <small class="text-muted text-uppercase fw-semibold">
+
+                            Total Classes
+
+                        </small>
+
+                        <h2 class="fw-bold mt-2 mb-0">
+
+                            {{ $totalClasses }}
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="bg-success bg-opacity-10 text-success rounded-4 p-3">
+
+                        <i class="bi bi-mortarboard-fill fs-2"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
     <!-- TABLE -->
 
-    <div class="card shadow border-0">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
 
-        <div class="card-body">
+        <div class="card-body p-4">
 
-            <table class="table table-bordered table-hover align-middle">
+            <div class="table-responsive">
 
-                <thead class="table-dark">
+                <table class="table align-middle table-hover mb-0">
 
-                    <tr>
+                    <thead class="table-dark">
 
-                        <th width="80">S.No</th>
+                        <tr>
 
-                        <th>Class</th>
+                            <th width="80">
 
-                        <th>Subject</th>
+                                #
 
-                        <th width="180">Action</th>
+                            </th>
 
-                    </tr>
+                            <th>
 
-                </thead>
+                                Class
 
-                <tbody>
+                            </th>
 
-                    @forelse($subjects as $key => $subject)
+                            <th>
 
-                    <tr>
+                                Subjects
 
-                        <td>
-                            {{ ++$key }}
-                        </td>
+                            </th>
 
-                        <td>
-                            {{ $subject->classModel->name }}
-                        </td>
+                            <th width="180">
 
-                        <td>
-                            {{ $subject->name }}
-                        </td>
+                                Action
 
-                        <td>
+                            </th>
 
-                            <!-- EDIT -->
+                        </tr>
 
-                            <a href="{{ route('subjects.edit',$subject->id) }}"
-                               class="btn btn-success btn-sm">
-
-                                <i class="bi bi-pencil-square"></i>
-
-                            </a>
+                    </thead>
 
 
 
-                            <!-- DELETE -->
+                    <tbody>
 
-                            <form action="{{ route('subjects.destroy',$subject->id) }}"
-                                  method="POST"
-                                  class="d-inline deleteForm">
+                        @forelse($classes as $key => $class)
 
-                                @csrf
-                                @method('DELETE')
+                        <tr>
 
-                                <button type="submit"
-                                        class="btn btn-danger btn-sm">
+                            <!-- SNO -->
 
-                                    <i class="bi bi-trash"></i>
+                            <td>
 
-                                </button>
+                                <span class="fw-bold text-primary">
 
-                            </form>
+                                    {{ ++$key }}
 
-                        </td>
+                                </span>
 
-                    </tr>
+                            </td>
 
-                    @empty
 
-                    <tr>
 
-                        <td colspan="4"
-                            class="text-center text-muted">
+                            <!-- CLASS -->
 
-                            No Subjects Found
+                            <td>
 
-                        </td>
+                                <div class="d-flex align-items-center gap-3">
 
-                    </tr>
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-2">
 
-                    @endforelse
+                                        <i class="bi bi-mortarboard-fill"></i>
 
-                </tbody>
+                                    </div>
 
-            </table>
+                                    <div>
+
+                                        <div class="fw-semibold">
+
+                                            {{ $class->name }}
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            Academic Class
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- SUBJECTS -->
+
+                            <td>
+
+                                @forelse($class->subjects as $subject)
+
+                                <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-semibold me-1 mb-1">
+
+                                    {{ $subject->name }}
+
+                                </span>
+
+                                @empty
+
+                                <span class="text-muted">
+
+                                    No Subjects
+
+                                </span>
+
+                                @endforelse
+
+                            </td>
+
+
+
+                            <!-- ACTION -->
+
+                            <td>
+
+                                <div class="dropdown">
+
+                                    <button
+                                        class="btn btn-light border shadow-sm rounded-circle"
+                                        data-bs-toggle="dropdown"
+                                        style="width:42px;height:42px;">
+
+                                        <i class="bi bi-three-dots"></i>
+
+                                    </button>
+
+
+
+                                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-4 p-2">
+
+                                        @forelse($class->subjects as $subject)
+
+                                        <!-- SUBJECT TITLE -->
+
+                                        <li>
+
+                                            <div class="dropdown-item-text small fw-bold text-muted">
+
+                                                {{ $subject->name }}
+
+                                            </div>
+
+                                        </li>
+
+                                        <!-- EDIT -->
+                                        <li>
+
+                                            <a href="{{ route('subjects.edit',$subject->id) }}"
+                                                class="dropdown-item rounded-3">
+
+                                                <i class="bi bi-pencil-square text-primary me-2"></i>
+
+                                                Edit
+
+                                            </a>
+
+                                        </li>
+
+
+
+                        
+
+                                        <li>
+
+                                            <form
+                                                action="{{ route('subjects.destroy',$subject->id) }}"
+                                                method="POST"
+                                                class="deleteForm">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    class="dropdown-item text-danger rounded-3">
+
+                                                    <i class="bi bi-trash me-2"></i>
+
+                                                    Delete
+
+                                                </button>
+
+                                            </form>
+
+                                        </li>
+
+
+
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+
+                                        @empty
+
+                                        <li>
+
+                                            <span class="dropdown-item-text text-muted">
+
+                                                No Subjects
+
+                                            </span>
+
+                                        </li>
+
+                                        @endforelse
+
+                                    </ul>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        @empty
+
+                        <tr>
+
+                            <td colspan="4"
+                                class="text-center py-5">
+
+                                <div class="text-muted">
+
+                                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+
+                                    No Subjects Found
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
@@ -131,76 +403,77 @@
 
 
 
+
+
+
 @push('scripts')
 
-<!-- SUCCESS MESSAGE -->
+<!-- SUCCESS -->
 
 @if(session('success'))
 
 <script>
+    Swal.fire({
 
-Swal.fire({
+        icon: 'success',
 
-    icon: 'success',
+        title: 'Success',
 
-    title: 'Success',
+        text: '{{ session('success')}}',
 
-    text: '{{ session('success') }}',
+        timer: 2000,
 
-    timer: 2000,
+        showConfirmButton: false
 
-    showConfirmButton: false
-
-});
-
+    });
 </script>
 
 @endif
 
 
 
-<!-- DELETE CONFIRM -->
+
+
+<!-- DELETE -->
 
 <script>
+    $(document).ready(function() {
 
-$(document).ready(function(){
+        $('.deleteForm').submit(function(e) {
 
-    $('.deleteForm').submit(function(e){
+            e.preventDefault();
 
-        e.preventDefault();
+            let form = this;
 
-        let form = this;
+            Swal.fire({
 
-        Swal.fire({
+                title: 'Are you sure?',
 
-            title: 'Are you sure?',
+                text: "Deleted data cannot be recovered!",
 
-            text: "You won't be able to revert this!",
+                icon: 'warning',
 
-            icon: 'warning',
+                showCancelButton: true,
 
-            showCancelButton: true,
+                confirmButtonColor: '#0d6efd',
 
-            confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#dc3545',
 
-            cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes Delete'
 
-            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
 
-        }).then((result) => {
+                if (result.isConfirmed) {
 
-            if (result.isConfirmed) {
+                    form.submit();
 
-                form.submit();
+                }
 
-            }
+            });
 
         });
 
     });
-
-});
-
 </script>
 
 @endpush

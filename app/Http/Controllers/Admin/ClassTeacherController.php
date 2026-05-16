@@ -17,51 +17,143 @@ class ClassTeacherController extends Controller
 
     public function index(Request $request)
     {
+
+
+        $classTeacherConut = ClassTeacher::count();
+        
+        $totalTeacherCount =User::where('role','teacher')->count();
+
+        $totalSectionCount = Section::count();
+
         if ($request->ajax()) {
 
-            $classTeachers = ClassTeacher::with([
-                'classModel',
-                'section',
-                'teacher'
-            ])->latest();
+    $classTeachers = ClassTeacher::with([
 
-            return DataTables::of($classTeachers)
+        'classModel',
+        'section',
+        'teacher'
 
-                ->addIndexColumn()
+    ])->latest();
 
-                ->addColumn('class_name', function ($row) {
-                    return $row->classModel->name ?? '-';
-                })
 
-                ->addColumn('section_name', function ($row) {
-                    return $row->section->name ?? '-';
-                })
 
-                ->addColumn('teacher_name', function ($row) {
-                    return $row->teacher->name ?? '-';
-                })
+    return DataTables::of($classTeachers)
 
-                ->addColumn('action', function ($row) {
+        ->addIndexColumn()
 
-                    return '
-                        <button
-                            class="btn btn-warning btn-sm editBtn"
-                            data-id="'.$row->id.'">
-                            Edit
-                        </button>
 
-                        <button
-                            class="btn btn-danger btn-sm deleteBtn"
-                            data-id="'.$row->id.'">
-                            Delete
-                        </button>
-                    ';
-                })
 
-                ->rawColumns(['action'])
+        ->addColumn('class_name', function ($row) {
 
-                ->make(true);
-        }
+            return $row->classModel->name ?? '-';
+
+        })
+
+
+
+        ->addColumn('section_name', function ($row) {
+
+            return $row->section->name ?? '-';
+
+        })
+
+
+
+        ->addColumn('teacher_name', function ($row) {
+
+            return $row->teacher->name ?? '-';
+
+        })
+
+
+
+        // SEARCH CLASS
+
+        ->filterColumn('class_name', function($query, $keyword) {
+
+            $query->whereHas('classModel', function($q) use ($keyword){
+
+                $q->where(
+                    'name',
+                    'like',
+                    "%{$keyword}%"
+                );
+
+            });
+
+        })
+
+
+
+        // SEARCH SECTION
+
+        ->filterColumn('section_name', function($query, $keyword) {
+
+            $query->whereHas('section', function($q) use ($keyword){
+
+                $q->where(
+                    'name',
+                    'like',
+                    "%{$keyword}%"
+                );
+
+            });
+
+        })
+
+
+
+        // SEARCH TEACHER
+
+        ->filterColumn('teacher_name', function($query, $keyword) {
+
+            $query->whereHas('teacher', function($q) use ($keyword){
+
+                $q->where(
+                    'name',
+                    'like',
+                    "%{$keyword}%"
+                );
+
+            });
+
+        })
+
+
+
+        ->addColumn('action', function ($row) {
+
+            return '
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        class="btn btn-warning btn-sm rounded-circle editBtn"
+                        data-id="'.$row->id.'">
+
+                        <i class="bi bi-pencil"></i>
+
+                    </button>
+
+                    <button
+                        class="btn btn-danger btn-sm rounded-circle deleteBtn"
+                        data-id="'.$row->id.'">
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </div>
+
+            ';
+        })
+
+
+
+        ->rawColumns(['action'])
+
+        ->make(true);
+}
 
         $classes = ClassModel::all();
 
@@ -69,7 +161,7 @@ class ClassTeacherController extends Controller
 
         return view(
             'admin.class-teachers.index',
-            compact('classes', 'teachers')
+            compact('classes', 'teachers','classTeacherConut','totalTeacherCount','totalSectionCount')
         );
     }
 
