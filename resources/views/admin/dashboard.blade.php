@@ -129,7 +129,7 @@
                             <div>
 
                                 <small class="text-muted">
-                                    Total Classes
+                                    Total Departments
                                 </small>
 
                                 <h2 class="fw-bold mt-2 text-warning">

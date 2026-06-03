@@ -28,7 +28,7 @@
             class="sidebar-link {{ request()->routeIs('classes.*') ? 'active' : '' }}">
 
             <i class="bi bi-mortarboard me-2"></i>
-            Classes
+            Departments
         </a>
 
 

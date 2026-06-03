@@ -125,7 +125,7 @@
                 <h4 class="mb-0 fw-bold">
 
                     <i class="bi bi-mortarboard-fill"></i>
-                    Class Management
+                    Department Management
 
                 </h4>
 
