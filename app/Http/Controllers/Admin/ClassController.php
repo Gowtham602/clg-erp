@@ -151,9 +151,9 @@ class ClassController extends Controller
 
         ], [
 
-            'name.required' => 'Class name is required',
+            'name.required' => 'Department name is required',
 
-            'name.unique' => 'This class already exists'
+            'name.unique' => 'This Department already exists'
 
         ]);
 

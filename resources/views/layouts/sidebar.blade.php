@@ -20,15 +20,29 @@
             Dashboard
         </a>
 
+        <!-- ACADEMIC YEARS -->
+        <a href="{{ route('academic-years.index') }}"
+            class="sidebar-link {{ request()->routeIs('academic-years.*') ? 'active' : '' }}">
 
+            <i class="bi bi-calendar-range me-2"></i>
+            Academic Years
+        </a>
 
+        <!-- DEPARTMENTS -->
+    <a href="{{ route('departments.index') }}"
+        class="sidebar-link {{ request()->routeIs('departments.*') ? 'active' : '' }}">
+
+        <i class="bi bi-building me-2"></i>
+        Departments
+
+    </a>
 
         <!-- CLASSES -->
         <a href="{{ route('classes.index') }}"
             class="sidebar-link {{ request()->routeIs('classes.*') ? 'active' : '' }}">
 
             <i class="bi bi-mortarboard me-2"></i>
-            Departments
+            Course
         </a>
 
 
@@ -152,7 +166,7 @@
 
 
         <!-- ATTENDANCE -->
-<!-- 
+        <!-- 
         <a href="#"
             class="sidebar-link">
 

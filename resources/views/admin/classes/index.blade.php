@@ -18,7 +18,7 @@
                     <div>
 
                         <h6 class="mb-1 text-uppercase">
-                            Total Classes
+                            Total Departments
                         </h6>
 
                         <h2 class="fw-bold mb-0">
@@ -129,7 +129,7 @@
 
                 </h4>
 
-                <small>Manage classes and sections</small>
+                <small>Manage Departments and sections</small>
 
             </div>
 
@@ -138,7 +138,7 @@
                 id="addClassBtn">
 
                 <i class="bi bi-plus-circle"></i>
-                Add Class
+                Add departments
 
             </button>
 
@@ -155,7 +155,7 @@
                     <tr>
 
                         <th>#</th>
-                        <th>Class</th>
+                        <th>Departments Names</th>
                         <th>Sections</th>
                         <th width="150">Actions</th>
 
@@ -190,7 +190,7 @@
                 <h5 class="modal-title fw-bold"
                     id="modalTitle">
 
-                    Add Class
+                    Add Departments
 
                 </h5>
 
@@ -215,7 +215,7 @@
 
                         <label class="form-label fw-semibold">
 
-                            Class Name
+                            Departments Name
 
                         </label>
 
@@ -223,7 +223,7 @@
                             name="name"
                             id="name"
                             class="form-control"
-                            placeholder="Enter Class Name">
+                            placeholder="Enter Departments Name">
 
                         <small class="text-danger"
                             id="name_error"></small>
@@ -418,7 +418,7 @@
 
             $('#name').val(name);
 
-            $('#modalTitle').text('Edit Class');
+            $('#modalTitle').text('Edit Department Name');
 
             $('.text-danger').text('');
 

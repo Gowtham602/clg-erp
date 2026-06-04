@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\StudentPromotionController;
 use App\Http\Controllers\Admin\DashBoardController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\AcademicYearController;
+use App\Http\Controllers\Admin\DepartmentController;
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -74,6 +76,70 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('subjects', SubjectController::class);
     Route::get('subjects-data',[SubjectController::class, 'data'])->name('subjects-data');
 
+    //academic year
+
+
+
+    Route::get(
+        'academic-years',
+        [AcademicYearController::class, 'index']
+    )->name('academic-years.index');
+
+    Route::get(
+        'academic-years/data',
+        [AcademicYearController::class, 'data']
+    )->name('academic-years.data');
+
+    Route::post(
+        'academic-years/store',
+        [AcademicYearController::class, 'store']
+    )->name('academic-years.store');
+
+    Route::get(
+        'academic-years/{id}/edit',
+        [AcademicYearController::class, 'edit']
+    )->name('academic-years.edit');
+
+    Route::put(
+        'academic-years/{id}',
+        [AcademicYearController::class, 'update']
+    )->name('academic-years.update');
+
+    Route::delete(
+        'academic-years/{id}',
+        [AcademicYearController::class, 'destroy']
+    )->name('academic-years.destroy');
+
+
+    Route::get(
+    'departments',
+    [DepartmentController::class,'index']
+)->name('departments.index');
+
+Route::get(
+    'departments/data',
+    [DepartmentController::class,'data']
+)->name('departments.data');
+
+Route::post(
+    'departments/store',
+    [DepartmentController::class,'store']
+)->name('departments.store');
+
+Route::get(
+    'departments/{id}/edit',
+    [DepartmentController::class,'edit']
+)->name('departments.edit');
+
+Route::put(
+    'departments/{id}',
+    [DepartmentController::class,'update']
+)->name('departments.update');
+
+Route::delete(
+    'departments/{id}',
+    [DepartmentController::class,'destroy']
+)->name('departments.destroy');
 
     // subject teacher
 

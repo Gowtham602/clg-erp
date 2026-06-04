@@ -2,19 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class AcademicYear extends Model
+
+class Department extends Model
 {
-    use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
 
         'name',
-        'start_date',
-        'end_date',
+
+        'code',
+
         'status'
     ];
+
+    public function courses()
+    {
+        return $this->hasMany(
+            ClassModel::class,
+            'department_id'
+        );
+    }
 }
