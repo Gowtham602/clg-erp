@@ -14,7 +14,7 @@
                 <div>
                     <h2 class="fw-bold mb-1">
                         <i class="bi bi-mortarboard-fill"></i>
-                        School ERP - Students
+                        Agricultural College - Students
                     </h2>
 
                     <p class="mb-0">

@@ -13,9 +13,9 @@
             </button>
 
             <!-- LOGO -->
-            <span class="fw-bold fs-5 d-none d-md-inline">
-                <i class="bi bi-mortarboard-fill text-primary me-2"></i>
-                School System
+            <span class="fw-bold text-success fs-5 d-none d-md-inline success">
+                <i class="bi bi-mortarboard-fill text-success me-2"></i>
+                Agricultural College
             </span>
 
             <!-- MOBILE TITLE -->

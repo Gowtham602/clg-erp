@@ -13,7 +13,7 @@
             </h3>
 
             <small class="text-muted">
-                Welcome to School ERP System
+                Welcome to Agricultural College System
             </small>
         </div>
 

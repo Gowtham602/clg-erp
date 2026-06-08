@@ -3,8 +3,8 @@
     <div class="p-3">
 
         <!-- LOGO -->
-        <h4 class="text-center mb-4 fw-bold text-nowrap">
-            School ERP
+        <h4 class="text-center mb-1 fw-bold text-nowrap">
+             College
         </h4>
 
 
@@ -45,6 +45,15 @@
             Course
         </a>
 
+        
+            <a href="{{ route('semesters.index') }}"
+            class="sidebar-link {{ request()->routeIs('semesters.*') ? 'active' : '' }}">
+
+                <i class="bi bi-calendar3 me-2"></i>
+
+                Semesters
+
+            </a>
 
         <!-- SECTIONS -->
         <a href="{{ route('sections.index') }}"

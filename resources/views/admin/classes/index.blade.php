@@ -18,7 +18,7 @@
                     <div>
 
                         <h6 class="mb-1 text-uppercase">
-                            Total Departments
+                            Total Branch
                         </h6>
 
                         <h2 class="fw-bold mb-0">
@@ -147,28 +147,29 @@
         <!-- BODY -->
         <div class="card-body">
 
-            <table class="table table-bordered align-middle"
-                id="classesTable">
-
-                <thead class="table-light">
-
+            <table id="classesTable" class="table table-bordered table-striped">
+                <thead>
                     <tr>
-
                         <th>#</th>
-                        <th>Departments Names</th>
-                        <th>Sections</th>
-                        <th width="150">Actions</th>
+
+                        <th>Department</th>
+
+                        <th>Course Name</th>
+
+                        <th>Duration (Years)</th>
+
+                        <th>Total Semesters</th>
+
+                        <th>Status</th>
+
+                        <th width="150">Action</th>
 
                     </tr>
 
                 </thead>
-
             </table>
-
         </div>
-
     </div>
-
 </div>
 
 
@@ -176,77 +177,113 @@
 
 
 <!-- MODAL -->
-<div class="modal fade"
-    id="classModal"
-    tabindex="-1">
+<div class="modal fade" id="classModal" tabindex="-1">
 
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog">
 
-        <div class="modal-content border-0 shadow-lg">
+        <div class="modal-content">
 
-            <!-- HEADER -->
-            <div class="modal-header bg-primary text-white">
-
-                <h5 class="modal-title fw-bold"
-                    id="modalTitle">
-
-                    Add Departments
-
-                </h5>
-
-                <button type="button"
-                    class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"></button>
-
-            </div>
-
-            <!-- FORM -->
             <form id="classForm">
 
                 @csrf
 
-                <input type="hidden"
-                    id="class_id">
+                <input type="hidden" id="class_id">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Course
+                    </h5>
+
+                    <button type="button" class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
 
                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Department</label>
+                        <select name="department_id" class="form-select">
+                            <option value="">
+                                Select Department
+                            </option>
 
-                    <!-- CLASS NAME -->
+                            @foreach($departments as $department)
+
+                            <option value="{{ $department->id }}">
+                                {{ $department->name }}
+                            </option>
+
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
                     <div class="mb-3">
 
-                        <label class="form-label fw-semibold">
+                        <label>Course Name</label>
 
-                            Departments Name
-
-                        </label>
-
-                        <input type="text"
+                        <input
+                            type="text"
                             name="name"
-                            id="name"
                             class="form-control"
-                            placeholder="Enter Departments Name">
+                            placeholder="BE CSE">
 
-                        <small class="text-danger"
-                            id="name_error"></small>
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Duration Years</label>
+
+                        <input
+                            type="number"
+                            name="duration_years"
+                            class="form-control"
+                            placeholder="4">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Total Semesters</label>
+
+                        <input
+                            type="number"
+                            name="total_semesters"
+                            class="form-control"
+                            placeholder="8">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label>Status</label>
+
+                        <select
+                            name="status"
+                            class="form-select">
+
+                            <option value="1">
+                                Active
+                            </option>
+
+                            <option value="0">
+                                Inactive
+                            </option>
+
+                        </select>
 
                     </div>
 
                 </div>
 
-                <!-- FOOTER -->
                 <div class="modal-footer">
 
-                    <button type="button"
-                        class="btn btn-secondary"
-                        data-bs-dismiss="modal">
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
 
-                        Close
-
-                    </button>
-
-                    <button type="submit"
-                        class="btn btn-success">
-
-                        <i class="bi bi-check-circle"></i>
                         Save
 
                     </button>
@@ -296,20 +333,32 @@
                 },
 
                 {
+                    data: 'department',
+                    name: 'department'
+                },
+
+                {
                     data: 'name',
                     name: 'name'
                 },
 
                 {
-                    data: 'sections',
-                    name: 'sections',
-                    orderable: false,
-                    searchable: false
+                    data: 'duration_years',
+                    name: 'duration_years'
+                },
+
+                {
+                    data: 'total_semesters',
+                    name: 'total_semesters'
+                },
+
+                {
+                    data: 'status',
+                    name: 'status'
                 },
 
                 {
                     data: 'action',
-                    name: 'action',
                     orderable: false,
                     searchable: false
                 }
@@ -348,62 +397,62 @@
 
         //deleted 
 
-        $(document).on('click', '.deleteBtn', function () {
+        $(document).on('click', '.deleteBtn', function() {
 
-    let id = $(this).data('id');
+            let id = $(this).data('id');
 
-    Swal.fire({
+            Swal.fire({
 
-        title: 'Are you sure?',
+                title: 'Are you sure?',
 
-        text: "You won't be able to revert this!",
+                text: "You won't be able to revert this!",
 
-        icon: 'warning',
+                icon: 'warning',
 
-        showCancelButton: true,
+                showCancelButton: true,
 
-        confirmButtonColor: '#d33',
+                confirmButtonColor: '#d33',
 
-        cancelButtonColor: '#3085d6',
+                cancelButtonColor: '#3085d6',
 
-        confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, delete it!'
 
-    }).then((result) => {
+            }).then((result) => {
 
-        if (result.isConfirmed) {
+                if (result.isConfirmed) {
 
-            $.ajax({
+                    $.ajax({
 
-                url: "{{ route('classes.destroy', ':id') }}"
-                    .replace(':id', id),
+                        url: "{{ route('classes.destroy', ':id') }}"
+                            .replace(':id', id),
 
-                type: "POST",
+                        type: "POST",
 
-                data: {
+                        data: {
 
-                    _token: "{{ csrf_token() }}",
+                            _token: "{{ csrf_token() }}",
 
-                    _method: "DELETE"
+                            _method: "DELETE"
 
-                },
+                        },
 
-                success: function (response) {
+                        success: function(response) {
 
-                    toastr.success('Class Deleted Successfully');
+                            toastr.success('Class Deleted Successfully');
 
-                    $('#classesTable')
-                        .DataTable()
-                        .ajax.reload();
+                            $('#classesTable')
+                                .DataTable()
+                                .ajax.reload();
+
+                        }
+
+                    });
 
                 }
 
             });
 
-        }
-
-    });
-
-});
+        });
 
 
 

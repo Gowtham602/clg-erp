@@ -8,55 +8,70 @@ use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Department;
 
 class ClassController extends Controller
 {
 
     // INDEX
+    //     public function index()
+    // {
+    //     $totalClasses = ClassModel::count();
+
+    //     $totalSections = Section::count();
+
+    //     $activeClasses = ClassModel::count();
+
+
+
+    //     // CLASS ORDER
+    //     $classes = ClassModel::orderByRaw("
+
+    //         CASE
+
+    //             WHEN name = 'LKG' THEN -1
+
+    //             WHEN name = 'UKG' THEN 0
+
+    //             ELSE CAST(name AS UNSIGNED)
+
+    //         END ASC
+
+    //     ")->get();
+
+
+
+    //     return view(
+    //         'admin.classes.index',
+
+    //         compact(
+
+    //             'classes',
+
+    //             'totalClasses',
+
+    //             'totalSections',
+
+    //             'activeClasses'
+    //         )
+    //     );
+    // }
+
     public function index()
-{
-    $totalClasses = ClassModel::count();
+    {
+        $departments = Department::where(
+            'status',
+            1
+        )->get();
+       $totalClasses = ClassModel::count();
+        $totalSections = Section::count();
 
-    $totalSections = Section::count();
-
-    $activeClasses = ClassModel::count();
-
-
-
-    // CLASS ORDER
-    $classes = ClassModel::orderByRaw("
-
-        CASE
-
-            WHEN name = 'LKG' THEN -1
-
-            WHEN name = 'UKG' THEN 0
-
-            ELSE CAST(name AS UNSIGNED)
-
-        END ASC
-
-    ")->get();
-
-
-
-    return view(
-        'admin.classes.index',
-
-        compact(
-
-            'classes',
-
-            'totalClasses',
-
-            'totalSections',
-
-            'activeClasses'
-        )
-    );
-}
-
-
+        $activeClasses = ClassModel::count();
+        return view(
+            'admin.classes.index',
+            compact('departments','totalClasses','totalSections','activeClasses')
+        );
+    }
 
 
 
@@ -64,9 +79,9 @@ class ClassController extends Controller
     public function data()
     {
 
-       $classes = ClassModel::with('sections')
+        $classes = ClassModel::with('sections')
 
-    ->orderByRaw("
+            ->orderByRaw("
 
         CASE
 
@@ -91,36 +106,37 @@ class ClassController extends Controller
                 if ($class->sections->count() > 0) {
 
                     return $class->sections->pluck('name')->implode(' , ');
-
                 }
 
                 return 'No Sections';
-
             })
 
 
+                ->addColumn('department', function ($row) {
 
+                return $row->department->name ?? '-';
+
+                })
             ->addColumn('action', function ($class) {
 
                 return '
 
                     <button class="btn btn-primary btn-sm editBtn"
-                            data-id="'.$class->id.'"
-                            data-name="'.$class->name.'">
+                            data-id="' . $class->id . '"
+                            data-name="' . $class->name . '">
 
                         <i class="bi bi-pencil"></i>
 
                     </button>
 
                     <button class="btn btn-danger btn-sm deleteBtn"
-                            data-id="'.$class->id.'">
+                            data-id="' . $class->id . '">
 
                         <i class="bi bi-trash"></i>
 
                     </button>
 
                 ';
-
             })
 
 
@@ -128,7 +144,6 @@ class ClassController extends Controller
             ->rawColumns(['action'])
 
             ->make(true);
-
     }
 
 
@@ -138,43 +153,44 @@ class ClassController extends Controller
     // STORE
     public function store(Request $request)
     {
-
         $request->validate([
 
-            'name' => [
+            'department_id' => 'required',
 
-                'required',
+            'name' => 'required|unique:classes,name',
 
-                'unique:classes,name'
+            'duration_years' => 'required|integer|min:1',
 
-            ]
+            'total_semesters' => 'required|integer|min:1'
 
         ], [
 
-            'name.required' => 'Department name is required',
+            'department_id.required' => 'Department is required',
 
-            'name.unique' => 'This Department already exists'
+            'name.required' => 'Course name is required',
 
+            'name.unique' => 'Course already exists'
         ]);
-
-
 
         ClassModel::create([
 
-            'name' => $request->name
+            'department_id' => $request->department_id,
 
+            'name' => $request->name,
+
+            'duration_years' => $request->duration_years,
+
+            'total_semesters' => $request->total_semesters,
+
+            'status' => $request->status
         ]);
-
-
 
         return response()->json([
 
             'status' => true,
 
-            'message' => 'Class Added Successfully'
-
+            'message' => 'Course Added Successfully'
         ]);
-
     }
 
 
@@ -184,43 +200,40 @@ class ClassController extends Controller
     // UPDATE
     public function update(Request $request, ClassModel $class)
     {
-
         $request->validate([
 
+            'department_id' => 'required',
+
             'name' => [
-
                 'required',
-
                 Rule::unique('classes', 'name')->ignore($class->id)
+            ],
 
-            ]
+            'duration_years' => 'required',
 
-        ], [
-
-            'name.required' => 'Class name is required',
-
-            'name.unique' => 'Class already exists'
+            'total_semesters' => 'required'
 
         ]);
-
-
 
         $class->update([
 
-            'name' => $request->name
+            'department_id' => $request->department_id,
 
+            'name' => $request->name,
+
+            'duration_years' => $request->duration_years,
+
+            'total_semesters' => $request->total_semesters,
+
+            'status' => $request->status
         ]);
-
-
 
         return response()->json([
 
             'status' => true,
 
-            'message' => 'Class Updated Successfully'
-
+            'message' => 'Course Updated Successfully'
         ]);
-
     }
 
 
@@ -229,18 +242,16 @@ class ClassController extends Controller
 
     // DELETE
     public function destroy(ClassModel $class)
-{
+    {
 
-    $class->delete();
+        $class->delete();
 
-    return response()->json([
+        return response()->json([
 
-        'status' => true,
+            'status' => true,
 
-        'message' => 'Deleted Successfully'
+            'message' => 'Deleted Successfully'
 
-    ]);
-
-}
-
+        ]);
+    }
 }

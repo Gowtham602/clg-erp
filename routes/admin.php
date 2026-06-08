@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\SectionController;
+use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\ClassTeacherController;
 use App\Http\Controllers\Admin\SubjectTeacherController;
 use App\Http\Controllers\Admin\StudentController;
@@ -76,34 +77,35 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('subjects', SubjectController::class);
     Route::get('subjects-data',[SubjectController::class, 'data'])->name('subjects-data');
 
+
+
+    //semester 
+    Route::get('semesters',[SemesterController::class, 'index'])->name('semesters.index');
+
+    Route::get('semesters/data',[SemesterController::class, 'data'])->name('semesters.data');
+
+    Route::post('semesters/store',[SemesterController::class, 'store'])->name('semesters.store');
+
+    Route::get('semesters/{id}/edit',[SemesterController::class, 'edit'])->name('semesters.edit');
+
+    Route::put('semesters/{id}',[SemesterController::class, 'update'])->name('semesters.update');
+
+    Route::delete('semesters/{id}',[SemesterController::class, 'destroy'])->name('semesters.destroy');
+
+
     //academic year
 
 
 
-    Route::get(
-        'academic-years',
-        [AcademicYearController::class, 'index']
-    )->name('academic-years.index');
+    Route::get('academic-years',[AcademicYearController::class, 'index'])->name('academic-years.index');
 
-    Route::get(
-        'academic-years/data',
-        [AcademicYearController::class, 'data']
-    )->name('academic-years.data');
+    Route::get('academic-years/data', [AcademicYearController::class, 'data'])->name('academic-years.data');
 
-    Route::post(
-        'academic-years/store',
-        [AcademicYearController::class, 'store']
-    )->name('academic-years.store');
+    Route::post('academic-years/store',[AcademicYearController::class, 'store'])->name('academic-years.store');
 
-    Route::get(
-        'academic-years/{id}/edit',
-        [AcademicYearController::class, 'edit']
-    )->name('academic-years.edit');
+    Route::get('academic-years/{id}/edit',[AcademicYearController::class, 'edit'])->name('academic-years.edit');
 
-    Route::put(
-        'academic-years/{id}',
-        [AcademicYearController::class, 'update']
-    )->name('academic-years.update');
+    Route::put('academic-years/{id}',[AcademicYearController::class, 'update'])->name('academic-years.update');
 
     Route::delete(
         'academic-years/{id}',

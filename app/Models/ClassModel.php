@@ -13,20 +13,42 @@ class ClassModel extends Model
     protected $table = 'classes';
 
     protected $fillable = [
-        'name'
+
+        'department_id',
+
+        'name',
+
+        'duration_years',
+
+        'total_semesters',
+
+        'status'
     ];
 
-   
-
-    // One Class -> Many Sections
-      public function sections()
+    // Course belongs to Department
+    public function department()
     {
-        return $this->hasMany(Section::class, 'class_id');
+        return $this->belongsTo(
+            Department::class,
+            'department_id'
+        );
     }
 
-    // One Class -> Many Subjects
+    // Course has many Sections
+    public function sections()
+    {
+        return $this->hasMany(
+            Section::class,
+            'class_id'
+        );
+    }
+
+    // Course has many Subjects
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'class_id');
+        return $this->hasMany(
+            Subject::class,
+            'class_id'
+        );
     }
 }
