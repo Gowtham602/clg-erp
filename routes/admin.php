@@ -139,18 +139,36 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/promotion', [PromotionController::class, 'promote'])->name('promotion.store');
 
 
-    Route::get('student-promotions',
-    [StudentPromotionController::class, 'index'])
-    ->name('student.promotions.index');
+//     Route::get('student-promotions',
+//     [StudentPromotionController::class, 'index'])
+//     ->name('student.promotions.index');
 
-Route::post('student-promotions/get-students',
-    [StudentPromotionController::class, 'getStudents'])
-    ->name('student.promotions.getStudents');
+// Route::post('student-promotions/get-students',
+//     [StudentPromotionController::class, 'getStudents'])
+//     ->name('student.promotions.getStudents');
 
-Route::post('student-promotions/promote',
-    [StudentPromotionController::class, 'promote'])
-    ->name('student.promotions.promote');
+// Route::post('student-promotions/promote',
+//     [StudentPromotionController::class, 'promote'])
+//     ->name('student.promotions.promote');
+ Route::get(
+        'student-promotions',
+        [StudentPromotionController::class, 'index']
+    )->name('student.promotions.index');
 
+    Route::post(
+        'student-promotions/get-students',
+        [StudentPromotionController::class, 'getStudents']
+    )->name('student.promotions.getStudents');
+
+    Route::post(
+        'student-promotions/promote',
+        [StudentPromotionController::class, 'promote']
+    )->name('student.promotions.promote');
+
+    Route::get(
+    'get-sections/{course}',
+    [StudentPromotionController::class,'getSections']
+);
 });
 
 // Route::controller(PromotionController::class)
