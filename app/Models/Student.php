@@ -13,10 +13,7 @@ class Student extends Model
     protected $fillable = [
 
         'admission_no',
-        'roll_no',
-        'section_id',
         'admission_date',
-        'status',
 
         'first_name',
         'last_name',
@@ -48,15 +45,23 @@ class Student extends Model
         return $this->belongsTo(ClassModel::class);
     }
 
-     public function creator()
+     // Created By
+    public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(
+            User::class,
+            'created_by'
+        );
     }
     
     // Who updated
+     // Updated By
     public function updater()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(
+            User::class,
+            'updated_by'
+        );
     }
     public function teacher()
     {
@@ -64,9 +69,13 @@ class Student extends Model
     }
 
 
+    // Promotion History
     public function histories()
     {
-        return $this->hasMany(StudentHistory::class);
+        return $this->hasMany(
+            StudentHistory::class,
+            'student_id'
+        );
     }
    public function section()
     {
@@ -79,14 +88,21 @@ class Student extends Model
             'section_id'
         );
     }
+      // Student Academics
     public function academics()
     {
-    return $this->hasMany(StudentAcademic::class);
+        return $this->hasMany(
+            StudentAcademic::class,
+            'student_id'
+        );
     }
     
+    // Current Academic Record
     public function currentAcademic()
     {
-        return $this->hasOne(StudentAcademic::class)
-            ->latestOfMany();
+        return $this->hasOne(
+            StudentAcademic::class,
+            'student_id'
+        )->latestOfMany();
     }
 }

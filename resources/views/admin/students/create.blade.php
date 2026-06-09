@@ -19,7 +19,7 @@
             </h5>
 
             <a href="{{ route('students.index') }}"
-               class="btn btn-light btn-sm">
+                class="btn btn-light btn-sm">
 
                 Back
 
@@ -32,8 +32,8 @@
         <div class="card-body">
 
             <form id="studentForm"
-                  action="{{ route('students.store') }}"
-                  method="POST">
+                action="{{ route('students.store') }}"
+                method="POST">
 
                 @csrf
 
@@ -47,8 +47,8 @@
                         </label>
 
                         <input type="text"
-                               name="admission_no"
-                               class="form-control">
+                            name="admission_no"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -63,20 +63,20 @@
                         </label>
 
                         <input type="text"
-                               name="roll_no"
-                               class="form-control">
+                            name="roll_no"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
                     </div>
 
 
-                  
-                    <div class="col-md-4 mb-3">
+
+                    <!-- <div class="col-md-4 mb-3">
 
                         <label>Academic Year<span class="text-danger">*</span></label>
 
-                        <select name="academic_year" class="form-control">
+                        <select name="academic_year_id" class="form-control">
 
                             <option value="">Select Year</option>
 
@@ -90,8 +90,89 @@
 
                         </select>
 
+                    </div> -->
+
+
+                    <div class="col-md-4 mb-3">
+
+                        <label>Academic Year *</label>
+
+                        <select
+                            name="academic_year_id"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Select Academic Year
+                            </option>
+
+                            @foreach($academicYears as $year)
+
+                            <option value="{{ $year->id }}">
+
+                                {{ $year->name }}
+
+                            </option>
+
+                            @endforeach
+
+                        </select>
+
                     </div>
 
+                    <div class="col-md-4 mb-3">
+
+                        <label>Course *</label>
+
+                        <select name="course_id" id="course_id" class="form-select">
+
+                            <option value=""> Select Course </option>
+
+                            @foreach($courses as $course)
+                            <option value="{{ $course->id }}">
+                                {{ $course->name }}
+                            </option>
+                            @endforeach
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label>Section *</label>
+
+                       <select name="section_id" id="section_id"  class="form-select">
+                            <option value="">     Select Section </option>
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+    <label class="form-label">
+        Semester
+    </label>
+
+    <select
+        name="semester_id"
+        class="form-select"
+        required>
+
+        <option value="">
+            Select Semester
+        </option>
+
+        @foreach($semesters as $semester)
+
+            <option value="{{ $semester->id }}">
+                {{ $semester->name }}
+            </option>
+
+        @endforeach
+
+    </select>
+
+</div>
 
                     <!-- First Name -->
                     <div class="col-md-4 mb-3">
@@ -101,8 +182,8 @@
                         </label>
 
                         <input type="text"
-                               name="first_name"
-                               class="form-control">
+                            name="first_name"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -117,14 +198,14 @@
                         </label>
 
                         <input type="text"
-                               name="last_name"
-                               class="form-control">
+                            name="last_name"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
                     </div>
 
-                      <!-- Section -->
+                    <!-- Section
                     <div class="col-md-4 mb-3">
 
                         <label class="form-label">
@@ -154,7 +235,7 @@
 
                         <div class="invalid-feedback"></div>
 
-                    </div>
+                    </div> -->
 
                     <!-- Gender -->
                     <div class="col-md-4 mb-3">
@@ -164,7 +245,7 @@
                         </label>
 
                         <select name="gender"
-                                class="form-select">
+                            class="form-select">
 
                             <option value="">
                                 Select Gender
@@ -197,8 +278,8 @@
                         </label>
 
                         <input type="number"
-                               name="phone"
-                               class="form-control">
+                            name="phone"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -213,8 +294,8 @@
                         </label>
 
                         <input type="email"
-                               name="email"
-                               class="form-control">
+                            name="email"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -225,12 +306,12 @@
                     <div class="col-md-4 mb-3">
 
                         <label class="form-label">
-                            DOB 
+                            DOB
                         </label>
 
                         <input type="date"
-                               name="dob"
-                               class="form-control">
+                            name="dob"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -245,8 +326,8 @@
                         </label>
 
                         <input type="text"
-                               name="father_name"
-                               class="form-control">
+                            name="father_name"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -261,8 +342,8 @@
                         </label>
 
                         <input type="text"
-                               name="mother_name"
-                               class="form-control">
+                            name="mother_name"
+                            class="form-control">
 
                         <div class="invalid-feedback"></div>
 
@@ -277,8 +358,8 @@
                         </label>
 
                         <textarea name="address"
-                                  rows="3"
-                                  class="form-control"></textarea>
+                            rows="3"
+                            class="form-control"></textarea>
 
                         <div class="invalid-feedback"></div>
 
@@ -291,7 +372,7 @@
                 <div class="text-end">
 
                     <button type="submit"
-                            class="btn btn-success">
+                        class="btn btn-success">
 
                         <i class="bi bi-check-circle"></i>
                         Save Student
@@ -315,243 +396,257 @@
 @push('scripts')
 
 <script>
+    $(document).ready(function() {
 
-$(document).ready(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | ON CHANGE VALIDATION
+        |--------------------------------------------------------------------------
+        */
 
-    /*
-    |--------------------------------------------------------------------------
-    | ON CHANGE VALIDATION
-    |--------------------------------------------------------------------------
-    */
+        $(document).on(
+            'keyup change',
+            'input, select, textarea',
+            function() {
 
-    $(document).on(
-        'keyup change',
-        'input, select, textarea',
-        function () {
+                validateField($(this));
+            }
+        );
+        
 
-            validateField($(this));
-        }
+
+        $('#course_id').change(function(){
+
+    let courseId = $(this).val();
+
+    let url = "{{ route('students.get-sections', ':id') }}";
+    url = url.replace(':id', courseId);
+
+    $('#section_id').html(
+        '<option value="">Loading...</option>'
     );
-
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | FORM SUBMIT
-    |--------------------------------------------------------------------------
-    */
-$('#studentForm').submit(function (e) {
-
-    e.preventDefault();
-
-    let form = this;
-
-    $('.is-invalid').removeClass('is-invalid');
-
-    $('.invalid-feedback').html('');
 
     $.ajax({
 
-        url: $(form).attr('action'),
+        url: url,
 
-        type: 'POST',
+        type: 'GET',
 
-        data: new FormData(form),
+        success: function(response){
 
-        processData: false,
+            let options =
+                '<option value="">Select Section</option>';
 
-        contentType: false,
+            $.each(response, function(index, section){
 
-        success: function (response) {
-
-            Swal.fire({
-
-                icon:'success',
-
-                title:'Success',
-
-                text:response.message,
-
-                timer:1500,
-
-                showConfirmButton:false
+                options += `
+                    <option value="${section.id}">
+                        ${section.name}
+                    </option>
+                `;
             });
 
-            setTimeout(function(){
-
-                window.location.href =
-                    "{{ route('students.index') }}";
-
-            },1500);
-        },
-
-        error: function (xhr) {
-
-            console.log(xhr.responseText);
-
-            if (xhr.status === 422) {
-
-                let errors =
-                    xhr.responseJSON.errors;
-
-                $.each(errors, function (field, messages) {
-
-                    let input =
-                        $('[name="' + field + '"]');
-
-                    input.addClass('is-invalid');
-
-                    input
-                        .closest('.mb-3')
-                        .find('.invalid-feedback')
-                        .html(messages[0]);
-                });
-            }
+            $('#section_id').html(options);
         }
+
     });
-});
-
-
-
-
-    function validateField(input)
-    {
-        let name  = input.attr('name');
-
-        let value = input.val();
-
-        input.removeClass('is-invalid');
-
-        input.closest('.mb-3')
-             .find('.invalid-feedback')
-             .html('');
-
-
-
-        // FIRST NAME
-        if(name == 'first_name')
-        {
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'First name is required');
-            }
-        }
-
-
-        // ADMISSION NO
-        if(name == 'admission_no')
-        {
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'Admission no is required');
-            }
-        }
-
-
-        // PHONE
-        if(name == 'phone')
-        {
-            let phonePattern =
-                /^[0-9]{10}$/;
-
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'Phone is required');
-            }
-
-            else if(!phonePattern.test(value))
-            {
-                showError(input,
-                    'Enter valid 10 digit phone');
-            }
-        }
-
-
-        // EMAIL
-        if(name == 'email')
-        {
-            let emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if(value != '' &&
-                !emailPattern.test(value))
-            {
-                showError(input,
-                    'Enter valid email');
-            }
-        }
-
-
-        // FATHER
-        if(name == 'father_name')
-        {
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'Father name is required');
-            }
-        }
-
-
-        // MOTHER
-        if(name == 'mother_name')
-        {
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'Mother name is required');
-            }
-        }
-
-
-        // ADDRESS
-        if(name == 'address')
-        {
-            if(value.trim() == '')
-            {
-                showError(input,
-                    'Address is required');
-            }
-        }
-
-
-        // GENDER
-        if(name == 'gender')
-        {
-            if(value == '')
-            {
-                showError(input,
-                    'Select gender');
-            }
-        }
-
-
-        // SECTION
-        if(name == 'section_id')
-        {
-            if(value == '')
-            {
-                showError(input,
-                    'Select section');
-            }
-        }
-    }
-
-
-    function showError(input, message)
-    {
-        input.addClass('is-invalid');
-
-        input.closest('.mb-3')
-             .find('.invalid-feedback')
-             .html(message);
-    }
 
 });
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | FORM SUBMIT
+        |--------------------------------------------------------------------------
+        */
+        $('#studentForm').submit(function(e) {
+
+            e.preventDefault();
+
+            let form = this;
+
+            $('.is-invalid').removeClass('is-invalid');
+
+            $('.invalid-feedback').html('');
+
+            $.ajax({
+
+                url: $(form).attr('action'),
+
+                type: 'POST',
+
+                data: new FormData(form),
+
+                processData: false,
+
+                contentType: false,
+
+                success: function(response) {
+
+                    Swal.fire({
+
+                        icon: 'success',
+
+                        title: 'Success',
+
+                        text: response.message,
+
+                        timer: 1500,
+
+                        showConfirmButton: false
+                    });
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "{{ route('students.index') }}";
+
+                    }, 1500);
+                },
+
+                error: function(xhr) {
+
+                    console.log(xhr.responseText);
+
+                    if (xhr.status === 422) {
+
+                        let errors =
+                            xhr.responseJSON.errors;
+
+                        $.each(errors, function(field, messages) {
+
+                            let input =
+                                $('[name="' + field + '"]');
+
+                            input.addClass('is-invalid');
+
+                            input
+                                .closest('.mb-3')
+                                .find('.invalid-feedback')
+                                .html(messages[0]);
+                        });
+                    }
+                }
+            });
+        });
+
+
+
+
+        function validateField(input) {
+            let name = input.attr('name');
+
+            let value = input.val();
+
+            input.removeClass('is-invalid');
+
+            input.closest('.mb-3')
+                .find('.invalid-feedback')
+                .html('');
+
+
+
+            // FIRST NAME
+            if (name == 'first_name') {
+                if (value.trim() == '') {
+                    showError(input,
+                        'First name is required');
+                }
+            }
+
+
+            // ADMISSION NO
+            if (name == 'admission_no') {
+                if (value.trim() == '') {
+                    showError(input,
+                        'Admission no is required');
+                }
+            }
+
+
+            // PHONE
+            if (name == 'phone') {
+                let phonePattern =
+                    /^[0-9]{10}$/;
+
+                if (value.trim() == '') {
+                    showError(input,
+                        'Phone is required');
+                } else if (!phonePattern.test(value)) {
+                    showError(input,
+                        'Enter valid 10 digit phone');
+                }
+            }
+
+
+            // EMAIL
+            if (name == 'email') {
+                let emailPattern =
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (value != '' &&
+                    !emailPattern.test(value)) {
+                    showError(input,
+                        'Enter valid email');
+                }
+            }
+
+
+            // FATHER
+            if (name == 'father_name') {
+                if (value.trim() == '') {
+                    showError(input,
+                        'Father name is required');
+                }
+            }
+
+
+            // MOTHER
+            if (name == 'mother_name') {
+                if (value.trim() == '') {
+                    showError(input,
+                        'Mother name is required');
+                }
+            }
+
+
+            // ADDRESS
+            if (name == 'address') {
+                if (value.trim() == '') {
+                    showError(input,
+                        'Address is required');
+                }
+            }
+
+
+            // GENDER
+            if (name == 'gender') {
+                if (value == '') {
+                    showError(input,
+                        'Select gender');
+                }
+            }
+
+
+            // SECTION
+            if (name == 'section_id') {
+                if (value == '') {
+                    showError(input,
+                        'Select section');
+                }
+            }
+        }
+
+
+        function showError(input, message) {
+            input.addClass('is-invalid');
+
+            input.closest('.mb-3')
+                .find('.invalid-feedback')
+                .html(message);
+        }
+
+    });
 </script>
 
 @endpush

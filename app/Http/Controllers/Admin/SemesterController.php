@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\ClassModel;
 use App\Models\Semester;
@@ -67,18 +68,57 @@ public function data()
         ->make(true);
 }
 
+
 public function store(Request $request)
 {
     $request->validate([
-
         'course_id' => 'required',
+        'name' => ['required',Rule::unique('semesters')
+                ->where(function ($query) use ($request) {
+                    return $query->where(
+                        'course_id',
+                        $request->course_id
+                    );
+                })
+        ],
+        'semester_no' => ['required',Rule::unique('semesters')
+                ->where(function ($query) use ($request) {
+                    return $query->where(
+                        'course_id',
+                        $request->course_id
+                    );
+                })
+        ]
+    ],[
 
-        'semester_no' => 'required',
+      'name.required' => 'Semester name is required',
 
-        'name' => 'required'
+        'semester_no.required' => 'Semester number is required',
+
+        'name.unique' => 'This semester already exists for the selected course',
+
+        'semester_no.unique' => 'Semester number already exists for this course'
+
     ]);
+    $course = ClassModel::find($request->course_id);
 
-    Semester::create($request->all());
+if($request->semester_no > $course->total_semesters){
+
+    return response()->json([
+        'message' => 'Semester exceeds course limit'
+    ],422);
+}
+
+    Semester::create([
+
+        'course_id' => $request->course_id,
+
+        'name' => $request->name,
+
+        'semester_no' => $request->semester_no,
+
+        'status' => $request->status
+    ]);
 
     return response()->json([
 
@@ -95,7 +135,67 @@ public function update(Request $request, $id)
 {
     $semester = Semester::findOrFail($id);
 
-    $semester->update($request->all());
+    $request->validate([
+
+        'course_id' => 'required',
+
+        'name' => [
+
+            'required',
+
+            Rule::unique('semesters')
+                ->ignore($id)
+                ->where(function ($query) use ($request) {
+
+                    return $query->where(
+                        'course_id',
+                        $request->course_id
+                    );
+
+                })
+        ],
+
+        'semester_no' => [
+
+            'required',
+
+            Rule::unique('semesters')
+                ->ignore($id)
+                ->where(function ($query) use ($request) {
+
+                    return $query->where(
+                        'course_id',
+                        $request->course_id
+                    );
+
+                })
+        ]
+
+    ],[
+
+        'name.unique' => 'Semester already exists for this course',
+
+        'semester_no.unique' => 'Semester number already exists for this course'
+
+    ]);
+    $course = ClassModel::find($request->course_id);
+
+if($request->semester_no > $course->total_semesters){
+
+    return response()->json([
+        'message' => 'Semester exceeds course limit'
+    ],422);
+}
+    $semester->update([
+
+        'course_id' => $request->course_id,
+
+        'name' => $request->name,
+
+        'semester_no' => $request->semester_no,
+
+        'status' => $request->status
+    ]);
 
     return response()->json([
 

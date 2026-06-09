@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Student;
 use App\Models\Section;
+use App\Models\AcademicYear;
+use App\Models\Semester;
+use App\Models\ClassModel;
 use Illuminate\Http\Request;
 use App\Models\StudentAcademic;
 use App\Http\Controllers\Controller;
@@ -17,6 +20,15 @@ class StudentController extends Controller
     {
         return view('admin.students.index');
     }
+    public function getSections($courseId)
+{
+    $sections = Section::where(
+        'class_id',
+        $courseId
+    )->get();
+
+    return response()->json($sections);
+}
 
 
     // public function data()
@@ -115,75 +127,81 @@ class StudentController extends Controller
         END ASC
     ");
 
-    return DataTables::of($students)
+ return DataTables::of($students)
 
-        ->addColumn('student_name', function ($row) {
+    ->addIndexColumn()
 
-            return $row->first_name;
-        })
+    ->addColumn('student_name', function ($row) {
+        return $row->first_name.' '.$row->last_name;
+    })
 
-        ->addColumn('class', function ($row) {
+    ->addColumn('roll_no', function ($row) {
+        return optional($row->currentAcademic)->roll_no ?? '-';
+    })
 
-            return $row->currentAcademic->section->class->name ?? '-';
-        })
+    ->addColumn('course', function ($row) {
+        return optional(optional($row->currentAcademic)->course)->name ?? '-';
+    })
 
-        ->addColumn('section', function ($row) {
+    ->addColumn('semester', function ($row) {
+        return optional(optional($row->currentAcademic)->semester)->name ?? '-';
+    })
 
-            return $row->currentAcademic->section->name ?? '-';
-        })
+    ->addColumn('section', function ($row) {
+        return optional(optional($row->currentAcademic)->section)->name ?? '-';
+    })
 
-        ->addColumn('teacher', function ($row) {
+    ->addColumn('academic_year', function ($row) {
+        return optional(optional($row->currentAcademic)->academicYear)->name ?? '-';
+    })
 
-            return $row->currentAcademic->section->classTeacher->teacher->name ?? '-';
-        })
+    ->addColumn('status', function ($row) {
+        return '<span class="badge bg-success">Active</span>';
+    })
 
-        ->addColumn('roll_no', function ($row) {
-
-            return $row->currentAcademic->roll_no ?? '-';
-        })
-
-        ->addColumn('academic_year', function ($row) {
-
-            return $row->currentAcademic->academic_year ?? '-';
-        })
-
-        ->addColumn('action', function ($row) {
-
-            return '
-
-                <a href="'.route('students.show',$row->id).'"
+    ->addColumn('action', function ($row) {
+        return '
+        <a href="'.route('students.show',$row->id).'"
                     class="btn btn-info btn-sm">
 
                     <i class="bi bi-eye"></i>
                 </a>
+            <a href="'.route('students.edit',$row->id).'"
+               class="btn btn-primary btn-sm">
+               <i class="bi bi-pencil"></i>
+            </a>
 
-                <a href="'.route('students.edit',$row->id).'"
-                    class="btn btn-primary btn-sm">
-
-                    <i class="bi bi-pencil"></i>
-                </a>
-
-                <button class="btn btn-danger btn-sm deleteBtn"
+            <button class="btn btn-danger btn-sm deleteBtn"
                     data-id="'.$row->id.'">
+                <i class="bi bi-trash"></i>
+            </button>
+        ';
+    })
 
-                    <i class="bi bi-trash"></i>
-                </button>
-            ';
-        })
+    ->rawColumns(['status','action'])
 
-        ->rawColumns(['action'])
-
-        ->make(true);
+    ->make(true);
 }
-    public function create()
-    {
-        $sections = Section::with('class')->get();
+  public function create()
+{
+    $academicYears = AcademicYear::all();
 
-        return view(
-            'admin.students.create',
-            compact('sections')
-        );
-    }
+    $courses = ClassModel::where('status',1)->get();
+
+    $semesters = Semester::where('status',1)->get();
+
+    $sections = Section::where('status',1)->get();
+
+    return view(
+        'admin.students.create',
+        compact(
+            'academicYears',
+            'courses',
+            'semesters',
+            'sections'
+        )
+    );
+}
 
 
     public function store(Request $request)
@@ -192,11 +210,16 @@ class StudentController extends Controller
     // dd($request);
         $request->validate([
 
+
+    'course_id' => 'required',
+
+
+
             'admission_no' => 'required|unique:students',
 
             'section_id' => 'required|exists:sections,id',
 
-            'academic_year' => 'required',
+            'academic_year_id' => 'required',
 
             'roll_no' => 'required',
 
@@ -225,6 +248,7 @@ class StudentController extends Controller
             */
 
             $student = Student::create([
+                
 
                 'admission_no' => $request->admission_no,
 
@@ -270,18 +294,36 @@ class StudentController extends Controller
             |--------------------------------------------------------------------------
             */
 
+            // StudentAcademic::create([
+
+            //     'student_id' => $student->id,
+
+            //     'section_id' => $request->section_id,
+
+            //     'academic_year_id' => $request->academic_year_id,
+
+            //     'roll_no' => $request->roll_no,
+
+            //     'status' => 'studying'
+                
+            // ]);
+       
             StudentAcademic::create([
 
-                'student_id' => $student->id,
+    'student_id'       => $student->id,
 
-                'section_id' => $request->section_id,
+    'academic_year_id' => $request->academic_year_id,
 
-                'academic_year' => $request->academic_year,
+    'course_id'        => $request->course_id,
 
-                'roll_no' => $request->roll_no,
+    'semester_id'      => $request->semester_id,
 
-                'status' => 'studying'
-            ]);
+    'section_id'       => $request->section_id,
+
+    'roll_no'          => $request->roll_no,
+
+    'status'           => 'studying'
+]);
 
 
             DB::commit();

@@ -25,6 +25,6 @@ class Semester extends Model
         return $this->belongsTo(
             ClassModel::class,
             'course_id'
-        );
+        ); 
     }
 }

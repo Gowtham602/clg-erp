@@ -74,32 +74,35 @@
                 <table class="table table-hover align-middle"
                        id="studentTable"
                        width="100%">
+<thead class="table-primary">
 
-                    <thead class="table-primary">
+<tr>
 
-                        <tr>
+    <th>#</th>
 
-                            <th>S No</th>
+    <th>Student Name</th>
 
-                            <th>Name</th>
+    <th>Admission No</th>
 
-                            <th>Father</th>
+    <th>Roll No</th>
 
-                            <th>Phone</th>
+    <th>Phone</th>
 
-                            <th>Class</th>
+    <th>Course</th>
 
-                            <th>Section</th>
+    <th>Semester</th>
 
-                            <th>Academic Year</th>
+    <th>Section</th>
 
-                            <th>Class Teacher</th>
+    <th>Academic Year</th>
 
-                            <th class="text-center">Action</th>
+    <th>Status</th>
 
-                        </tr>
+    <th>Action</th>
 
-                    </thead>
+</tr>
+
+</thead>
 
                 </table>
 
@@ -167,7 +170,7 @@
 
 $(document).ready(function(){
 
-    $('#studentTable').DataTable({
+    let table = $('#studentTable').DataTable({
 
         processing:true,
 
@@ -180,26 +183,24 @@ $(document).ready(function(){
         columns:[
 
             {
-                data:null,
+                data:'DT_RowIndex',
                 orderable:false,
-                searchable:false,
-
-                render:function(data,type,row,meta){
-
-                    return meta.row
-                        + meta.settings._iDisplayStart
-                        + 1;
-                }
+                searchable:false
             },
 
             {
-                data:'first_name',
-                name:'first_name'
+                data:'student_name',
+                name:'student_name'
             },
 
             {
-                data:'father_name',
-                name:'father_name'
+                data:'admission_no',
+                name:'admission_no'
+            },
+
+            {
+                data:'roll_no',
+                name:'roll_no'
             },
 
             {
@@ -208,8 +209,13 @@ $(document).ready(function(){
             },
 
             {
-                data:'class',
-                name:'class'
+                data:'course',
+                name:'course'
+            },
+
+            {
+                data:'semester',
+                name:'semester'
             },
 
             {
@@ -223,8 +229,8 @@ $(document).ready(function(){
             },
 
             {
-                data:'teacher',
-                name:'teacher'
+                data:'status',
+                name:'status'
             },
 
             {
@@ -241,32 +247,73 @@ $(document).ready(function(){
 
 
     // DELETE
+
     $(document).on('click','.deleteBtn',function(){
 
         let id = $(this).data('id');
 
-        if(confirm('Delete this student?')){
+        Swal.fire({
 
-            $.ajax({
+            title:'Are you sure?',
 
-                url:"{{ url('admin/students') }}/" + id,
+            text:'Delete this student?',
 
-                type:'DELETE',
+            icon:'warning',
 
-                data:{
-                    _token:'{{ csrf_token() }}'
-                },
+            showCancelButton:true,
 
-                success:function(){
+            confirmButtonText:'Yes Delete',
 
-                    $('#studentTable')
-                        .DataTable()
-                        .ajax.reload();
+            cancelButtonText:'Cancel'
 
-                    alert('Student Deleted Successfully');
-                }
-            });
-        }
+        }).then((result)=>{
+
+            if(result.isConfirmed){
+
+                let url = "{{ route('students.destroy', ':id') }}";
+
+                url = url.replace(':id', id);
+
+                $.ajax({
+
+                    url:url,
+
+                    type:'POST',
+
+                    data:{
+
+                        _token:'{{ csrf_token() }}',
+
+                        _method:'DELETE'
+
+                    },
+
+                    success:function(response){
+
+                        table.ajax.reload();
+
+                        Swal.fire({
+
+                            icon:'success',
+
+                            title:'Success',
+
+                            text:'Student Deleted Successfully',
+
+                            timer:2000,
+
+                            showConfirmButton:false
+
+                        });
+
+                    }
+
+                });
+
+            }
+
+        });
+
     });
 
 });

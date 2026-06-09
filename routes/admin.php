@@ -46,7 +46,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     //  Teachers
     
     // Route::resource('teachers', TeacherController::class)->except(['show']);
-     Route::resource('teachers', TeacherController::class );
+    Route::resource('teachers', TeacherController::class );
 
     Route::get('teachers-data', [TeacherController::class, 'data'])
         ->name('teachers.data');
@@ -93,10 +93,11 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('semesters/{id}',[SemesterController::class, 'destroy'])->name('semesters.destroy');
 
 
-    //academic year
-
-
-
+    //academic year 
+    Route::get(
+    'get-sections/{course}',
+    [StudentController::class, 'getSections']
+)->name('students.get-sections');
     Route::get('academic-years',[AcademicYearController::class, 'index'])->name('academic-years.index');
 
     Route::get('academic-years/data', [AcademicYearController::class, 'data'])->name('academic-years.data');
@@ -107,41 +108,20 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     Route::put('academic-years/{id}',[AcademicYearController::class, 'update'])->name('academic-years.update');
 
-    Route::delete(
-        'academic-years/{id}',
-        [AcademicYearController::class, 'destroy']
-    )->name('academic-years.destroy');
+    Route::delete('academic-years/{id}',[AcademicYearController::class, 'destroy'])->name('academic-years.destroy');
 
 
-    Route::get(
-    'departments',
-    [DepartmentController::class,'index']
-)->name('departments.index');
+    Route::get('departments',[DepartmentController::class,'index'])->name('departments.index');
 
-Route::get(
-    'departments/data',
-    [DepartmentController::class,'data']
-)->name('departments.data');
+    Route::get('departments/data',[DepartmentController::class,'data'])->name('departments.data');
 
-Route::post(
-    'departments/store',
-    [DepartmentController::class,'store']
-)->name('departments.store');
+    Route::post('departments/store',[DepartmentController::class,'store'])->name('departments.store');
 
-Route::get(
-    'departments/{id}/edit',
-    [DepartmentController::class,'edit']
-)->name('departments.edit');
+    Route::get('departments/{id}/edit',[DepartmentController::class,'edit'])->name('departments.edit');
 
-Route::put(
-    'departments/{id}',
-    [DepartmentController::class,'update']
-)->name('departments.update');
+    Route::put('departments/{id}',[DepartmentController::class,'update'])->name('departments.update');
 
-Route::delete(
-    'departments/{id}',
-    [DepartmentController::class,'destroy']
-)->name('departments.destroy');
+    Route::delete('departments/{id}',[DepartmentController::class,'destroy'])->name('departments.destroy');
 
     // subject teacher
 
