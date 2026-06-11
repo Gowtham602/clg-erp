@@ -12,7 +12,29 @@
             <form action="{{ route('subject-teacher.store') }}"
                 method="POST">
                 @csrf
+
+                <div class="mb-3">
+    <label>Academic Year</label>
+
+    <select name="academic_year_id"
+            class="form-control">
+
+        <option value="">
+            Select Academic Year
+        </option>
+
+        @foreach($academicYears as $year)
+
+            <option value="{{ $year->id }}">
+                {{ $year->name }}
+            </option>
+
+        @endforeach
+
+    </select>
+</div>
                 <!-- CLASS -->
+
                 <div class="mb-3">
                     <label class="form-label">    Class   </label>
                     <select name="class_id"    id="class_id" class="form-control @error('class_id') is-invalid @enderror">
@@ -30,6 +52,21 @@
                     @enderror
                 </div>
               
+                <div class="mb-3">
+
+    <label>Semester</label>
+
+    <select name="semester_id"
+            id="semester_id"
+            class="form-control">
+
+        <option value="">
+            Select Semester
+        </option>
+
+    </select>
+
+</div>
                 <!-- SECTION -->
                 <div class="mb-3">
                     <label class="form-label">
@@ -116,7 +153,24 @@
                 </div>
 
 
+<div class="mb-3">
 
+    <label>Status</label>
+
+    <select name="status"
+            class="form-control">
+
+        <option value="1">
+            Active
+        </option>
+
+        <option value="0">
+            Inactive
+        </option>
+
+    </select>
+
+</div>
 
                 <!-- BUTTON -->
 
@@ -143,84 +197,87 @@
 @push('scripts')
 
 <script>
-    $(document).ready(function() {
+$(document).ready(function () {
 
-        $('#class_id').change(function() {
+    $('#class_id').change(function () {
 
-            let class_id = $(this).val();
+        let classId = $(this).val();
 
+        // Semester
+        $.get(
+            "{{ route('get-semesters', ':id') }}"
+            .replace(':id', classId),
 
+            function(data){
 
+                $('#semester_id').html(
+                    '<option value="">Select Semester</option>'
+                );
 
-            // LOAD SUBJECTS
+                $.each(data,function(i,row){
 
-            $.ajax({
-
-                url: "{{ route('get-subjects', ':id') }}"
-                    .replace(':id', class_id),
-
-                type: 'GET',
-
-                success: function(data) {
-
-                    $('#subject_id').html(
-                        '<option value="">Select Subject</option>'
+                    $('#semester_id').append(
+                        `<option value="${row.id}">
+                            ${row.name}
+                        </option>`
                     );
 
-                    $.each(data, function(key, value) {
+                });
 
-                        $('#subject_id').append(
+            }
+        );
 
-                            `<option value="${value.id}">
-                            ${value.name}
+        // Subject
+        $.get(
+            "{{ route('get.subjects', ':id') }}"
+            .replace(':id', classId),
+
+            function(data){
+
+                $('#subject_id').html(
+                    '<option value="">Select Subject</option>'
+                );
+
+                $.each(data,function(i,row){
+
+                    $('#subject_id').append(
+                        `<option value="${row.id}">
+                            ${row.name}
                         </option>`
-
-                        );
-
-                    });
-
-                }
-
-            });
-
-
-
-
-
-            // LOAD SECTIONS
-
-            $.ajax({
-
-                url: "{{ route('get-sections', ':id') }}"
-                    .replace(':id', class_id),
-
-                type: 'GET',
-
-                success: function(data) {
-
-                    $('#section_id').html(
-                        '<option value="">Select Section</option>'
                     );
 
-                    $.each(data, function(key, value) {
+                });
 
-                        $('#section_id').append(
+            }
+        );
 
-                            `<option value="${value.id}">
-                            ${value.name}
+        // Section
+        $.get(
+            "{{ route('get.sections', ':id') }}"
+            .replace(':id', classId),
+
+            function(data){
+
+                $('#section_id').html(
+                    '<option value="">Select Section</option>'
+                );
+
+                $.each(data,function(i,row){
+
+                    $('#section_id').append(
+                        `<option value="${row.id}">
+                            ${row.name}
                         </option>`
+                    );
 
-                        );
+                });
 
-                    });
-
-                }
-
-            });
-
-        });
+            }
+        );
 
     });
+
+});
 </script>
 
 @endpush

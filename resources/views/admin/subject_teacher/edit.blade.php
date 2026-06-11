@@ -14,18 +14,40 @@
                 Edit Subject Teacher Mapping
             </h5>
 
-        </div> 
+        </div>
 
 
         {{-- BODY --}}
 
         <div class="card-body">
-
-            <form id="editForm">
+            <form id="editForm"
+                action="{{ route('subject-teacher.update',$subjectTeacher->id) }}"
+                method="POST">
 
                 @csrf
                 @method('PUT')
+                <!-- ACADEMIC YEAR -->
 
+                <div class="mb-3">
+                    <label class="form-label">Academic Year</label>
+
+                    <select name="academic_year_id"
+                        id="academic_year_id"
+                        class="form-select">
+
+                        @foreach($academicYears as $year)
+
+                        <option value="{{ $year->id }}"
+                            {{ $subjectTeacher->academic_year_id == $year->id ? 'selected' : '' }}>
+
+                            {{ $year->name }}
+
+                        </option>
+
+                        @endforeach
+
+                    </select>
+                </div>
 
                 {{-- CLASS --}}
 
@@ -37,6 +59,7 @@
 
                     <select
                         id="class_id"
+                        name="class_id"
                         class="form-select">
 
                         <option value="">
@@ -58,7 +81,34 @@
                     </select>
 
                 </div>
+                <!-- SEMESTER -->
 
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Semester
+                    </label>
+
+                    <select
+                        name="semester_id"
+                        id="semester_id"
+                        class="form-select">
+
+                        @foreach($semesters as $semester)
+
+                        <option
+                            value="{{ $semester->id }}"
+                            {{ $subjectTeacher->semester_id == $semester->id ? 'selected' : '' }}>
+
+                            {{ $semester->name }}
+
+                        </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
 
 
                 {{-- SUBJECT --}}
@@ -169,7 +219,31 @@
                     <small class="text-danger error_teacher_id"></small>
 
                 </div>
+                <!-- STATUS -->
 
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        class="form-select">
+
+                        <option value="1"
+                            {{ $subjectTeacher->status == 1 ? 'selected' : '' }}>
+                            Active
+                        </option>
+
+                        <option value="0"
+                            {{ $subjectTeacher->status == 0 ? 'selected' : '' }}>
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
 
 
                 {{-- BUTTON --}}
@@ -184,7 +258,7 @@
                 </button>
 
                 <a href="{{ route('subject-teacher.index') }}"
-                   class="btn btn-secondary">
+                    class="btn btn-secondary">
 
                     Back
 
@@ -206,172 +280,170 @@
 @push('scripts')
 
 <script>
+    $(document).ready(function() {
 
-$(document).ready(function () {
+        // SELECT2
 
-    // SELECT2
-
-    $('#teacher_id').select2({
-        theme: 'bootstrap-5',
-        width: '100%'
-    });
-
-
-    // CLASS CHANGE
-
-    $('#class_id').change(function () {
-
-        let classId = $(this).val();
-
-        if(classId == '') {
-
-            $('#subject_id').html(
-                '<option value="">Select Subject</option>'
-            );
-
-            $('#section_id').html(
-                '<option value="">Select Section</option>'
-            );
-
-            return;
-        }
+        $('#teacher_id').select2({
+            theme: 'bootstrap-5',
+            width: '100%'
+        });
 
 
-        // LOAD SUBJECTS
+        // CLASS CHANGE
 
-        $.ajax({
+        $('#class_id').change(function() {
 
-            url: "{{ route('get.subjects', ':id') }}"
+            let classId = $(this).val();
+
+            if (classId == '') {
+
+                $('#subject_id').html(
+                    '<option value="">Select Subject</option>'
+                );
+
+                $('#section_id').html(
+                    '<option value="">Select Section</option>'
+                );
+
+                return;
+            }
+
+
+            // LOAD SUBJECTS
+
+            $.ajax({
+
+                url: "{{ route('get.subjects', ':id') }}"
                     .replace(':id', classId),
 
-            type: 'GET',
+                type: 'GET',
 
-            success: function (subjects) {
+                success: function(subjects) {
 
-                let option =
-                    '<option value="">Select Subject</option>';
+                    let option =
+                        '<option value="">Select Subject</option>';
 
-                subjects.forEach(function (subject) {
+                    subjects.forEach(function(subject) {
 
-                    option += `
+                        option += `
                         <option value="${subject.id}">
                             ${subject.name}
                         </option>
                     `;
-                });
+                    });
 
-                $('#subject_id').html(option);
+                    $('#subject_id').html(option);
 
-            }
+                }
 
-        });
+            });
 
 
-        // LOAD SECTIONS
+            // LOAD SECTIONS
 
-        $.ajax({
+            $.ajax({
 
-            url: "{{ route('get.sections', ':id') }}"
+                url: "{{ route('get.sections', ':id') }}"
                     .replace(':id', classId),
 
-            type: 'GET',
+                type: 'GET',
 
-            success: function (sections) {
+                success: function(sections) {
 
-                let option =
-                    '<option value="">Select Section</option>';
+                    let option =
+                        '<option value="">Select Section</option>';
 
-                sections.forEach(function (section) {
+                    sections.forEach(function(section) {
 
-                    option += `
+                        option += `
                         <option value="${section.id}">
                             ${section.name}
                         </option>
                     `;
-                });
+                    });
 
-                $('#section_id').html(option);
+                    $('#section_id').html(option);
 
-            }
+                }
+
+            });
+
+        });
+
+
+
+        // UPDATE
+
+        $('#editForm').submit(function(e) {
+
+            e.preventDefault();
+
+            $('.text-danger').text('');
+
+            $('#updateBtn').html('Updating...');
+
+            $.ajax({
+
+                url: "{{ route('subject-teacher.update', $subjectTeacher->id) }}",
+
+                type: "POST",
+
+                data: $(this).serialize(),
+
+                success: function(response) {
+
+                    $('#updateBtn').html('Update');
+
+                    Swal.fire({
+
+                        icon: 'success',
+
+                        title: 'Updated Successfully',
+
+                        timer: 1500,
+
+                        showConfirmButton: false
+
+                    });
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "{{ route('subject-teacher.index') }}";
+
+                    }, 1500);
+
+                },
+
+                error: function(xhr) {
+
+                    $('#updateBtn').html('Update');
+
+                    let errors = xhr.responseJSON.errors;
+
+                    if (errors.subject_id) {
+                        $('.error_subject_id')
+                            .text(errors.subject_id[0]);
+                    }
+
+                    if (errors.section_id) {
+                        $('.error_section_id')
+                            .text(errors.section_id[0]);
+                    }
+
+                    if (errors.teacher_id) {
+                        $('.error_teacher_id')
+                            .text(errors.teacher_id[0]);
+                    }
+
+                }
+
+            });
 
         });
 
     });
-
-
-
-    // UPDATE
-
-    $('#editForm').submit(function (e) {
-
-        e.preventDefault();
-
-        $('.text-danger').text('');
-
-        $('#updateBtn').html('Updating...');
-
-        $.ajax({
-
-            url: "{{ route('subject-teacher.update', $subjectTeacher->id) }}",
-
-            type: "POST",
-
-            data: $(this).serialize(),
-
-            success: function (response) {
-
-                $('#updateBtn').html('Update');
-
-                Swal.fire({
-
-                    icon: 'success',
-
-                    title: 'Updated Successfully',
-
-                    timer: 1500,
-
-                    showConfirmButton: false
-
-                });
-
-                setTimeout(function () {
-
-                    window.location.href =
-                        "{{ route('subject-teacher.index') }}";
-
-                }, 1500);
-
-            },
-
-            error: function (xhr) {
-
-                $('#updateBtn').html('Update');
-
-                let errors = xhr.responseJSON.errors;
-
-                if(errors.subject_id){
-                    $('.error_subject_id')
-                        .text(errors.subject_id[0]);
-                }
-
-                if(errors.section_id){
-                    $('.error_section_id')
-                        .text(errors.section_id[0]);
-                }
-
-                if(errors.teacher_id){
-                    $('.error_teacher_id')
-                        .text(errors.teacher_id[0]);
-                }
-
-            }
-
-        });
-
-    });
-
-});
-
 </script>
 
 @endpush

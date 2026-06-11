@@ -126,7 +126,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // subject teacher
 
-    Route::resource('subject-teacher', SubjectTeacherController::class);
+    Route::resource('subject-teacher', SubjectTeacherController::class); 
+    Route::get('get-semesters/{course}',[SubjectTeacherController::class,'getSemesters'])->name('get-semesters');
     Route::get('admin/get-subjects/{class_id}', [SubjectTeacherController::class, 'getSubjects'])->name('get-subjects');
     Route::get('get-subjects/{class_id}',[SubjectTeacherController::class, 'getSubjects'])->name('get.subjects');
 
