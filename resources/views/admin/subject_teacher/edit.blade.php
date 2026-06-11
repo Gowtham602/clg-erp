@@ -14,7 +14,7 @@
                 Edit Subject Teacher Mapping
             </h5>
 
-        </div>
+        </div> 
 
 
         {{-- BODY --}}

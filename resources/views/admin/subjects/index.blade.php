@@ -295,18 +295,19 @@
                                         </li>
 
                                         <!-- EDIT -->
-                                        <li>
+                                        <!-- <li> -->
 
-                                            <a href="{{ route('subjects.edit',$subject->id) }}"
-                                                class="dropdown-item rounded-3">
+                                         <li>
+    <a href="{{ route('subjects.edit', $subject->id) }}"
+       class="dropdown-item rounded-3">
 
-                                                <i class="bi bi-pencil-square text-primary me-2"></i>
+        <i class="bi bi-pencil-square me-2"></i>
+        Edit
 
-                                                Edit
+    </a>
+</li>
 
-                                            </a>
-
-                                        </li>
+                                        <!-- </li> -->
 
 
 

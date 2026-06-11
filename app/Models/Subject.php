@@ -11,9 +11,18 @@ class Subject extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'class_id'
-    ];
+
+    'class_id',
+    'semester_id',
+    'subject_code',
+    'name',
+    'subject_type',
+    'credits',
+    'max_marks',
+    'pass_marks',
+    'status',
+
+];
 
 
     public function classModel()
@@ -31,4 +40,12 @@ class Subject extends Model
             'teacher_id'
         );
     }
+ 
+
+public function semester()
+{
+    return $this->belongsTo(Semester::class);
+}
+
+
 }

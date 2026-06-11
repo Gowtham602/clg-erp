@@ -33,7 +33,7 @@
 
 
                 <a href="{{ route('subjects.index') }}"
-                   class="btn btn-light btn-lg rounded-pill px-4 shadow-sm">
+                    class="btn btn-light btn-lg rounded-pill px-4 shadow-sm">
 
                     <i class="bi bi-arrow-left-circle me-2"></i>
 
@@ -68,96 +68,167 @@
                 <div class="row">
 
                     <!-- CLASS -->
+                    <!-- COURSE -->
 
                     <div class="col-md-6 mb-4">
-
                         <label class="form-label fw-semibold">
+                            Course
+                        </label>
 
-                            Class
+                        <select name="class_id" id="class_id" class="form-select">
+                            <option value=""> Select Course</option>
 
+                            @foreach($classes as $class)
+                            <option value="{{ $class->id }}">
+                                {{ $class->name }}
+                            </option>
+                            @endforeach
+                        </select>
+
+                        @error('class_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+
+                    <!-- SEMESTER -->
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Semester
                         </label>
 
                         <select
-                            name="class_id"
-                            class="form-select form-select-lg rounded-4 @error('class_id') is-invalid @enderror">
+    name="semester_id"
+    id="semester_id"
+    class="form-select @error('semester_id') is-invalid @enderror">
 
-                            <option value="">
+    <option value="">Select Semester</option>
 
-                                Select Class
+</select>
 
-                            </option>
-
-                            @foreach($classes as $class)
-
-                                <option
-                                    value="{{ $class->id }}"
-                                    {{ old('class_id') == $class->id ? 'selected' : '' }}>
-
-                                    {{ $class->name }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-
-
-                        @error('class_id')
-
-                            <div class="invalid-feedback">
-
-                                {{ $message }}
-
-                            </div>
-
-                        @enderror
-
+@error('semester_id')
+    <div class="invalid-feedback d-block">
+        {{ $message }}
+    </div>
+@enderror
                     </div>
 
+                    <!-- SUBJECT CODE -->
+<div class="col-md-6 mb-4">
 
+    <label class="form-label fw-semibold">
+        Subject Code
+    </label>
 
+    <input
+        type="text"
+        name="subject_code"
+        value="{{ old('subject_code') }}"
+        class="form-control form-control-lg rounded-4 @error('subject_code') is-invalid @enderror"
+        placeholder="Example: BCA101">
 
+    @error('subject_code')
+        <div class="invalid-feedback d-block">
+            {{ $message }}
+        </div>
+    @enderror
 
-                    <!-- SUBJECT -->
+</div>
+
+                    <!-- SUBJECT NAME -->
 
                     <div class="col-md-6 mb-4">
-
                         <label class="form-label fw-semibold">
-
                             Subject Name
-
                         </label>
 
-                        <div class="input-group input-group-lg">
+                        <input type="text"  name="name" value="{{ old('name') }}" class="form-control form-control-lg rounded-4 @error('name') is-invalid @enderror">
 
-                            <span class="input-group-text bg-primary text-white border-0 rounded-start-4">
+                            @error('name')
+                                <div class="invalid-feedback d-block">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                    </div>
 
-                                <i class="bi bi-journal-bookmark-fill"></i>
+                    <!-- SUBJECT TYPE -->
 
-                            </span>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Subject Type
+                        </label>
 
-                            <input
-                                type="text"
-                                name="name"
-                                class="form-control rounded-end-4 @error('name') is-invalid @enderror"
-                                placeholder="Enter Subject Name"
-                                value="{{ old('name') }}">
+                        <select
+                            name="subject_type"
+                            class="form-select form-select-lg rounded-4">
 
-                        </div>
+                            <option value="Theory">Theory</option>
+                            <option value="Lab">Lab</option>
 
+                        </select>
+                    </div>
 
+                    <!-- CREDITS -->
 
-                        @error('name')
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Credits
+                        </label>
 
-                            <div class="invalid-feedback d-block">
+                       <input  type="number"  name="credits"  value="{{ old('credits') }}"  class="form-control form-control-lg rounded-4 @error('credits') is-invalid @enderror">
 
-                                {{ $message }}
+@error('credits')
+    <div class="invalid-feedback d-block">
+        {{ $message }}
+    </div>
+@enderror
+                    </div>
 
-                            </div>
+                    <!-- MAX MARKS -->
 
-                        @enderror
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Maximum Marks
+                        </label>
 
+                        <input
+                            type="number"
+                            name="max_marks"
+                            value="{{ old('max_marks',100) }}"
+                            class="form-control form-control-lg rounded-4">
+                    </div>
+
+                    <!-- PASS MARKS -->
+
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-semibold">
+                            Pass Marks
+                        </label>
+
+                        <input
+                            type="number"
+                            name="pass_marks"
+                            value="{{ old('pass_marks',40) }}"
+                            class="form-control form-control-lg rounded-4">
+                    </div>
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select form-select-lg rounded-4">
+
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+
+                        </select>
                     </div>
 
                 </div>
@@ -171,7 +242,7 @@
                 <div class="d-flex justify-content-end gap-2 mt-3">
 
                     <a href="{{ route('subjects.index') }}"
-                       class="btn btn-light border rounded-pill px-4">
+                        class="btn btn-light border rounded-pill px-4">
 
                         Cancel
 
@@ -200,3 +271,60 @@
 </div>
 
 @endsection
+@push('scripts')
+
+<script>
+    // for  course and semester
+    $(document).ready(function() {
+
+        $('#class_id').on('change', function() {
+
+            let courseId = $(this).val();
+
+            $('#semester_id').empty()
+                .append('<option value="">Select Semester</option>');
+
+            if (courseId === '') {
+                return;
+            }
+
+            $.ajax({
+
+                url: "{{ route('subjects.semesters', ['course' => '__ID__']) }}"
+                    .replace('__ID__', courseId),
+
+                type: 'GET',
+
+                dataType: 'json',
+
+                success: function(response) {
+
+                    $.each(response, function(index, semester) {
+
+                        $('#semester_id').append(
+                            `<option value="${semester.id}">
+                            ${semester.name}
+                        </option>`
+                        );
+
+                    });
+
+                },
+
+                error: function(xhr) {
+
+                    console.error(xhr);
+
+                    $('#semester_id').html(
+                        '<option value="">No Semester Found</option>'
+                    );
+
+                }
+
+            });
+
+        });
+
+    });
+</script>
+@endpush

@@ -7,193 +7,323 @@ use App\Models\ClassModel;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-
+use App\Models\Semester;
 class SubjectController extends Controller
 {
 
     // INDEX
 
-    public function index()
-    {
-        $classes = ClassModel::with([
+    // public function index()
+    // {
+    //     $classes = ClassModel::with([
 
-            'subjects' => function ($query) {
+    //         'subjects' => function ($query) {
 
-                $query->latest();
+    //             $query->latest();
 
-            }
+    //         }
 
-        ])->latest()->get();
-
-
-        $totalSubjects = Subject::count();
-
-        $totalClasses = ClassModel::count();
+    //     ])->latest()->get();
 
 
-        return view(
-            'admin.subjects.index',
-            compact(
-                'classes',
-                'totalSubjects',
-                'totalClasses'
-            )
-        );
-    }
+    //     $totalSubjects = Subject::count();
+
+    //     $totalClasses = ClassModel::count();
 
 
+    //     return view(
+    //         'admin.subjects.index',
+    //         compact(
+    //             'classes',
+    //             'totalSubjects',
+    //             'totalClasses'
+    //         )
+    //     );
+    // }
+
+  public function index()
+{
+    $classes = ClassModel::with('subjects')->latest()->get();
+
+    $totalSubjects = Subject::count();
+
+    $totalClasses = ClassModel::count();
+
+    return view(
+        'admin.subjects.index',
+        compact(
+            'classes',
+            'totalSubjects',
+            'totalClasses'
+        )
+    );
+}
 
 
     // CREATE
 
     public function create()
-    {
-        $classes = ClassModel::latest()->get();
+{
+    $classes = ClassModel::orderBy('name')->get();
 
-        return view(
-            'admin.subjects.create',
-            compact('classes')
-        );
-    }
 
+
+    return view(
+        'admin.subjects.create',
+        compact(
+            'classes'
+            
+        )
+    );
+}
+
+public function getSemestersSubject($course)
+{
+    $semesters = Semester::where(
+        'course_id',
+        $course
+    )
+    ->orderBy('semester_no')
+    ->get();
+
+    return response()->json($semesters);
+}
 
 
 
     // STORE
 
-    public function store(Request $request)
-    {
-        $request->validate([
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
 
-            'class_id' => 'required|exists:classes,id',
+    //         'class_id' => 'required|exists:classes,id',
 
-            'name' => [
+    //         'name' => [
 
-                'required',
+    //             'required',
 
-                Rule::unique('subjects')
-                    ->where(function ($query) use ($request) {
+    //             Rule::unique('subjects')
+    //                 ->where(function ($query) use ($request) {
 
-                        return $query->where(
-                            'class_id',
-                            $request->class_id
-                        );
+    //                     return $query->where(
+    //                         'class_id',
+    //                         $request->class_id
+    //                     );
 
-                    })
+    //                 })
 
-            ]
+    //         ]
 
-        ], [
+    //     ], [
 
-            'class_id.required' => 'Class is required.',
+    //         'class_id.required' => 'Class is required.',
 
-            'class_id.exists' => 'Selected class invalid.',
+    //         'class_id.exists' => 'Selected class invalid.',
 
-            'name.required' => 'Subject name is required.',
+    //         'name.required' => 'Subject name is required.',
 
-            'name.unique' =>
-                'This subject already exists for selected class.'
+    //         'name.unique' =>
+    //             'This subject already exists for selected class.'
 
-        ]);
-
-
-        Subject::create([
-
-            'class_id' => $request->class_id,
-
-            'name' => trim($request->name)
-
-        ]);
+    //     ]);
 
 
-        return redirect()
-            ->route('subjects.index')
-            ->with(
-                'success',
-                'Subject Added Successfully'
-            );
-    }
+    //     Subject::create([
 
+    //         'class_id' => $request->class_id,
+
+    //         'name' => trim($request->name)
+
+    //     ]);
+
+
+    //     return redirect()
+    //         ->route('subjects.index')
+    //         ->with(
+    //             'success',
+    //             'Subject Added Successfully'
+    //         );
+    // }
+
+        public function store(Request $request)
+{
+   $request->validate([
+
+    'class_id'     => 'required|exists:classes,id',
+
+    'semester_id'  => 'required|exists:semesters,id',
+
+    'subject_code' => [
+        'required',
+        'max:50',
+        'unique:subjects,subject_code'
+    ],
+
+    'name' => [
+
+        'required',
+        'max:255',
+
+        Rule::unique('subjects')
+            ->where(function ($query) use ($request) {
+
+                return $query
+                    ->where('class_id', $request->class_id)
+                    ->where('semester_id', $request->semester_id);
+
+            })
+
+    ],
+
+], [
+
+    'class_id.required'     => 'Please select course.',
+
+    'semester_id.required'  => 'Please select semester.',
+
+    'subject_code.required' => 'Subject code is required.',
+
+    'subject_code.unique'   => 'Subject code already exists.',
+
+    'name.required'         => 'Subject name is required.',
+
+    'name.unique'           => 'This subject already exists in the selected course and semester.',
+
+]);
+
+    Subject::create([
+
+        'class_id'      => $request->class_id,
+        'semester_id'   => $request->semester_id,
+        'subject_code'  => strtoupper(trim($request->subject_code)),
+        'name'          => trim($request->name),
+        'subject_type'  => $request->subject_type,
+        'credits'       => $request->credits,
+        'max_marks'     => $request->max_marks,
+        'pass_marks'    => $request->pass_marks,
+        'status'        => $request->status,
+
+    ]);
+
+    return redirect()
+        ->route('subjects.index')
+        ->with(
+            'success',
+            'Subject Added Successfully'
+        );
+}
 
 
 
     // EDIT
 
-    public function edit($id)
-    {
-        $subject = Subject::findOrFail($id);
+   public function edit($id)
+{
+    $subject = Subject::findOrFail($id);
 
-        $classes = ClassModel::latest()->get();
+    $classes = ClassModel::orderBy('name')->get();
 
-        return view(
-            'admin.subjects.edit',
-            compact(
-                'subject',
-                'classes'
-            )
-        );
-    }
+    $semesters = Semester::where(
+        'course_id',
+        $subject->class_id
+    )
+    ->orderBy('semester_no')
+    ->get();
+
+    return view(
+        'admin.subjects.edit',
+        compact(
+            'subject',
+            'classes',
+            'semesters'
+        )
+    );
+}
 
 
 
 
     // UPDATE
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
+   public function update(Request $request, $id)
+{
+    $request->validate([
 
-            'class_id' => 'required|exists:classes,id',
+        'class_id'     => 'required|exists:classes,id',
 
-            'name' => [
+        'semester_id'  => 'required|exists:semesters,id',
 
-                'required',
+        'subject_code' => [
 
-                Rule::unique('subjects')
-                    ->ignore($id)
-                    ->where(function ($query) use ($request) {
+            'required',
 
-                        return $query->where(
-                            'class_id',
-                            $request->class_id
-                        );
+            Rule::unique('subjects','subject_code')
+                ->ignore($id)
 
-                    })
+        ],
 
-            ]
+        'name' => [
 
-        ], [
+            'required',
 
-            'class_id.required' => 'Class is required.',
+            Rule::unique('subjects')
+                ->ignore($id)
+                ->where(function ($query) use ($request) {
 
-            'class_id.exists' => 'Selected class invalid.',
+                    return $query
+                        ->where('class_id', $request->class_id)
+                        ->where('semester_id', $request->semester_id);
 
-            'name.required' => 'Subject name is required.',
+                })
 
-            'name.unique' =>
-                'This subject already exists for selected class.'
+        ],
 
-        ]);
+        'subject_type' => 'required|in:Theory,Lab',
 
+        'credits'      => 'required|integer|min:0',
 
-        $subject = Subject::findOrFail($id);
+        'max_marks'    => 'required|integer|min:1',
 
-        $subject->update([
+        'pass_marks'   => 'required|integer|min:1',
 
-            'class_id' => $request->class_id,
+        'status'       => 'required|boolean'
 
-            'name' => trim($request->name)
+    ]);
 
-        ]);
+    $subject = Subject::findOrFail($id);
 
+    $subject->update([
 
-        return redirect()
-            ->route('subjects.index')
-            ->with(
-                'success',
-                'Subject Updated Successfully'
-            );
-    }
+        'class_id'      => $request->class_id,
+
+        'semester_id'   => $request->semester_id,
+
+        'subject_code'  => strtoupper(
+            trim($request->subject_code)
+        ),
+
+        'name'          => trim($request->name),
+
+        'subject_type'  => $request->subject_type,
+
+        'credits'       => $request->credits,
+
+        'max_marks'     => $request->max_marks,
+
+        'pass_marks'    => $request->pass_marks,
+
+        'status'        => $request->status
+
+    ]);
+
+    return redirect()
+        ->route('subjects.index')
+        ->with(
+            'success',
+            'Subject Updated Successfully'
+        );
+}
 
 
 

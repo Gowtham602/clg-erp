@@ -72,8 +72,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('class-teachers', ClassTeacherController::class);
     Route::get('get-sections/{class}',[ClassTeacherController::class, 'getSections'])->name('get.sections');
 
-
-    //subject 
+ 
+    //subject  
+    Route::get('/get-course-semesters/{course}',[SubjectController::class, 'getSemestersSubject'])->name('subjects.semesters');
     Route::resource('subjects', SubjectController::class);
     Route::get('subjects-data',[SubjectController::class, 'data'])->name('subjects-data');
 
