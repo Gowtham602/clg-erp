@@ -27,327 +27,282 @@
 
 
         <!-- BODY -->
-        <div class="card-body">
+        <div class="container-fluid">
 
             <form id="teacherForm">
 
                 @csrf
 
-                <div class="row">
+                <!-- BASIC DETAILS -->
+                <div class="card shadow-sm mb-4 mt-3">
 
-                    <!-- NAME -->
-                    <div class="col-md-4 mb-3">
+                    <div class="card-header bg-primary text-white m-2">
 
-                        <label class="form-label"> Name</label>
-
-                        <input type="text" name="name" class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- EMAIL -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label"> Email </label>
-
-                        <input type="email" name="email" class="form-control">
-
-                        <div class="invalid-feedback"></div>
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-circle"></i>
+                            Basic Information
+                        </h5>
 
                     </div>
 
-
-                    <!-- EMPLOYEE ID -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">Employee ID</label>
-
-                        <input type="text" name="employee_id" class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- PHONE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">   Phone    </label>
-
-                        <input type="text"    name="phone"   class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- ALTERNATE PHONE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">    Alternate Phone </label>
-
-                        <input type="text" name="alternate_phone"  class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- GENDER -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">   Gender</label>
-
-                        <select name="gender" class="form-select">
-
-                            <option value="">    Select Gender</option>
-
-                            <option value="male">  Male</option>
-
-                            <option value="female">    Female</option>
-
-                            <option value="other">   Other </option>
-
-                        </select>
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- DOB -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">    DOB
-                        </label>
-
-                        <input type="date"
-                            name="dob"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- QUALIFICATION -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Qualification
-                        </label>
-
-                        <select name="qualification"
-                            class="form-select">
-
-                            <option value="">
-                                Select Qualification
-                            </option>
-
-                            <option value="B.Ed">
-                                B.Ed
-                            </option>
-
-                            <option value="M.Ed">
-                                M.Ed
-                            </option>
-
-                            <option value="BA">
-                                BA
-                            </option>
-
-                            <option value="MA">
-                                MA
-                            </option>
-
-                            <option value="BSc">
-                                BSc
-                            </option>
-
-                            <option value="MSc">
-                                MSc
-                            </option>
-
-                            <option value="PhD">
-                                PhD
-                            </option>
-
-                        </select>
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- EXPERIENCE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Experience
-                        </label>
-
-                        <input type="text"
-                            name="experience"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- JOINING DATE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Joining Date
-                        </label>
-
-                        <input type="date"
-                            name="joining_date"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- SALARY -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Salary
-                        </label>
-
-                        <input type="number"
-                            name="salary"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- BLOOD GROUP -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Blood Group
-                        </label>
-
-                        <select name="blood_group"
-                            class="form-select">
-
-                            <option value="">
-                                Select
-                            </option>
-
-                            <option>A+</option>
-                            <option>A-</option>
-                            <option>B+</option>
-                            <option>B-</option>
-                            <option>AB+</option>
-                            <option>AB-</option>
-                            <option>O+</option>
-                            <option>O-</option>
-
-                        </select>
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- AADHAAR -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Aadhaar No
-                        </label>
-
-                        <input type="text"
-                            name="aadhaar_no"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- CITY -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            City
-                        </label>
-
-                        <input type="text"
-                            name="city"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- STATE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            State
-                        </label>
-
-                        <input type="text"
-                            name="state"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- PINCODE -->
-                    <div class="col-md-4 mb-3">
-
-                        <label class="form-label">
-                            Pincode
-                        </label>
-
-                        <input type="text"
-                            name="pincode"
-                            class="form-control">
-
-                        <div class="invalid-feedback"></div>
-
-                    </div>
-
-
-                    <!-- ADDRESS -->
-                    <div class="col-md-12 mb-3">
-
-                        <label class="form-label">
-                            Address
-                        </label>
-
-                        <textarea name="address"
-                            rows="3"
-                            class="form-control"></textarea>
-
-                        <div class="invalid-feedback"></div>
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label>Name</label>
+                                <input type="text"
+                                    name="name"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Email</label>
+                                <input type="email"
+                                    name="email"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Employee ID</label>
+                                <input type="text"
+                                    name="employee_id"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Phone</label>
+                                <input type="number"
+                                    name="phone"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Alternate Phone</label>
+                                <input type="text"
+                                    name="alternate_phone"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Gender</label>
+
+                                <select class="form-select"
+                                    name="gender">
+
+                                    <option value="">
+                                        Select Gender
+                                    </option>
+
+                                    <option value="Male">
+                                        Male
+                                    </option>
+
+                                    <option value="Female">
+                                        Female
+                                    </option>
+
+                                </select>
+                                <div class="invalid-feedback"></div>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
                 </div>
 
+                <!-- PROFESSIONAL DETAILS -->
+                <div class="card shadow-sm mb-4">
 
-                <!-- BUTTON -->
+                    <div class="card-header bg-success text-white">
+
+                        <h5 class="mb-0">
+                            <i class="bi bi-briefcase"></i>
+                            Professional Information
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+
+                                <label>Department</label>
+
+                                <select class="form-select"
+                                    name="department_id">
+
+                                    <option value="">
+                                        Select Department
+                                    </option>
+
+                                    @foreach($departments as $department)
+
+                                    <option value="{{ $department->id }}">
+                                        {{ $department->name }}
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+
+                                <label>Designation</label>
+
+                                <select class="form-select"
+                                    name="designation_id">
+
+                                    <option value="">
+                                        Select Designation
+                                    </option>
+
+                                    @foreach($designations as $designation)
+
+                                    <option value="{{ $designation->id }}">
+                                        {{ $designation->name }}
+                                    </option>
+
+                                    @endforeach
+
+                                </select>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+    <label>Employment Type</label>
+
+    <select class="form-select" name="employment_type" required>
+        <option value="">Select Type</option>
+
+        <option value="Full Time">
+            Full Time
+        </option>
+
+        <option value="Part Time">
+            Part Time
+        </option>
+
+        <option value="Guest">
+            Guest
+        </option>
+    </select>
+
+    <div class="invalid-feedback"></div>
+</div>
+
+                            <div class="col-md-4 mb-3">
+
+                                <label>Qualification</label>
+
+                                <input type="text"
+                                    name="qualification"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+
+                                <label>Experience</label>
+
+                                <input type="text"
+                                    name="experience"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+
+                                <label>Joining Date</label>
+
+                                <input type="date"
+                                    name="joining_date"
+                                    class="form-control">
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ADDRESS DETAILS -->
+                <div class="card shadow-sm mb-4">
+
+                    <div class="card-header bg-warning">
+
+                        <h5 class="mb-0">
+                            <i class="bi bi-geo-alt"></i>
+                            Address & Documents
+                        </h5>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label>Aadhaar No</label>
+                                <input type="text"
+                                    name="aadhaar_no"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>City</label>
+                                <input type="text"
+                                    name="city"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>State</label>
+                                <input type="text"
+                                    name="state"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label>Pincode</label>
+                                <input type="text"
+                                    name="pincode"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-8 mb-3">
+                                <label>Address</label>
+
+                                <textarea
+                                    name="address"
+                                    rows="3"
+                                    class="form-control"></textarea>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
                 <div class="text-end">
 
-                    <button type="submit"
-                        class="btn btn-success">
+                    <button class="btn btn-primary btn-lg">
 
                         <i class="bi bi-check-circle"></i>
+
                         Save Teacher
 
                     </button>

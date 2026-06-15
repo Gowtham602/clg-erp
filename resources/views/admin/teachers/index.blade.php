@@ -49,88 +49,91 @@
     <!-- MAIN CARD -->
     <div class="card border-0 shadow-sm">
 
-        <!-- CARD HEADER -->
-        <div class="card-header bg-white border-0 py-3">
+    <!-- HEADER -->
+    <div class="card-header bg-white py-3 border-bottom">
 
-            <div class="row">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
 
-                <div class="col-md-5">
+            <div>
+                <h5 class="mb-1 fw-bold">
+                    <i class="bi bi-person-badge-fill text-primary"></i>
+                    Teacher Management
+                </h5>
 
-                    <div class="btn-group w-100">
-
-                        <!-- ACTIVE -->
-                        <button type="button"
-                                id="activeBtn"
-                                class="btn btn-primary">
-
-                            <i class="bi bi-people-fill"></i>
-                            Active Teachers
-
-                        </button>
-
-
-                        <!-- DELETED -->
-                        <button type="button"
-                                id="deletedBtn"
-                                class="btn btn-outline-danger">
-
-                            <i class="bi bi-trash3-fill"></i>
-                            Deleted History
-
-                        </button>
-
-                    </div>
-
-                </div>
-
+                <small class="text-muted">
+                    Manage Active & Deleted Teachers
+                </small>
             </div>
 
-        </div>
+            <div class="btn-group">
 
+                <button type="button"
+                    id="activeBtn"
+                    class="btn btn-primary">
 
+                    <i class="bi bi-people-fill"></i>
+                    Active Teachers
 
-        <!-- TABLE -->
-        <div class="card-body">
+                </button>
 
-            <div class="table-responsive">
+                <button type="button"
+                    id="deletedBtn"
+                    class="btn btn-outline-danger">
 
-                <table id="teacherTable"
-                       class="table table-hover align-middle w-100">
+                    <i class="bi bi-trash3-fill"></i>
+                    Deleted History
 
-                    <thead class="table-dark">
-
-                        <tr>
-
-                            <th width="70">SNo</th>
-
-                            <th>Name</th>
-
-                            <th>Email</th>
-
-                            <th>Phone</th>
-
-                            <th>Qualification</th>
-
-                            <th>Status</th>
-
-                            <th width="150"
-                                class="text-center">
-
-                                Action
-
-                            </th>
-
-                        </tr>
-
-                    </thead>
-
-                </table>
+                </button>
 
             </div>
 
         </div>
 
     </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table id="teacherTable"
+                class="table table-bordered table-hover align-middle w-100">
+
+                <thead class="table-primary">
+
+                    <tr>
+
+                        <th width="60">#</th>
+
+                        <th>Employee ID</th>
+
+                        <th>Name</th>
+
+                        <th>Department</th>
+
+                        <th>Designation</th>
+
+                        <th>Phone</th>
+
+                        <th>Joining Date</th>
+
+                        <th>Status</th>
+
+                        <th width="180" class="text-center">
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 </div>
 
@@ -204,180 +207,146 @@ $(document).ready(function () {
     |--------------------------------------------------------------------------
     */
 
-    table = $('#teacherTable').DataTable({
+   table = $('#teacherTable').DataTable({
 
-        processing:true,
+    processing: true,
 
-        serverSide:true,
+    serverSide: true,
 
-        responsive:true,
+    responsive: true,
 
-        ajax:{
+    ajax: {
+        url: "{{ route('teachers.data') }}",
 
-            url:"{{ route('teachers.data') }}",
+        data: function (d) {
+            d.type = typeTable;
+        }
+    },
 
-            data:function(d){
+    columns: [
 
-                d.type = typeTable;
+        {
+            data: null,
+            orderable: false,
+            searchable: false,
+
+            render: function (data, type, row, meta) {
+
+                return meta.row +
+                    meta.settings._iDisplayStart + 1;
             }
         },
 
+        {
+            data: 'employee_id',
+            name: 'employee_id'
+        },
 
+        {
+            data: 'name',
+            name: 'name'
+        },
 
-        columns:[
+        {
+            data: 'department',
+            name: 'department'
+        },
 
-            {
-                data:null,
+        {
+            data: 'designation',
+            name: 'designation'
+        },
 
-                orderable:false,
+        {
+            data: 'phone',
+            name: 'phone'
+        },
 
-                searchable:false,
+        {
+            data: 'joining_date',
+            name: 'joining_date'
+        },
 
-                render:function(data,type,row,meta){
+        {
+            data: 'status',
+            name: 'status',
+            orderable: false,
+            searchable: false,
 
-                    return meta.row +
-                        meta.settings._iDisplayStart + 1;
-                }
-            },
+            render: function (data) {
 
+                if (typeTable === 'deleted') {
 
-
-            {
-                data:'name',
-                name:'name'
-            },
-
-
-
-            {
-                data:'email',
-                name:'email'
-            },
-
-
-
-            {
-                data:'phone',
-                name:'phone'
-            },
-
-
-
-            {
-                data:'qualification',
-                name:'qualification'
-            },
-
-
-
-            {
-                data:'status',
-
-                render:function(data){
-
-                    // DELETED
-                    if(typeTable == 'deleted')
-                    {
-                        return `
-
-                            <span class="badge bg-danger">
-
-                                Deleted
-
-                            </span>
-
-                        `;
-                    }
-
-                    // ACTIVE
                     return `
-
-                        <span class="badge bg-success">
-
-                            Active
-
+                        <span class="badge bg-danger">
+                            Deleted
                         </span>
-
                     `;
                 }
-            },
 
+                return `
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                `;
+            }
+        },
 
+        {
+            data: 'id',
 
-            {
-                data:'id',
+            orderable: false,
 
-                orderable:false,
+            searchable: false,
 
-                searchable:false,
+            className: 'text-center',
 
-                className:'text-center',
+            render: function (data, type, row) {
 
-                render:function(data,type,row){
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | DELETED TABLE
-                    |--------------------------------------------------------------------------
-                    */
-
-                    if(typeTable == 'deleted')
-                    {
-                        return `
-
-                            <button
-                                onclick="restoreTeacher(${data})"
-                                class="btn btn-success btn-sm">
-
-                                <i class="bi bi-arrow-clockwise"></i>
-
-                            </button>
-
-                        `;
-                    }
-
-
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | ACTIVE TABLE
-                    |--------------------------------------------------------------------------
-                    */
-
-                    let editUrl =
-                        "{{ route('teachers.edit', ':id') }}";
-
-                    editUrl =
-                        editUrl.replace(':id', data);
+                // Deleted Records
+                if (typeTable === 'deleted') {
 
                     return `
-
-                        <a href="${editUrl}"
-                           class="btn btn-primary btn-sm">
-
-                            <i class="bi bi-pencil-fill"></i>
-
-                        </a>
-
-
-
                         <button
-                            onclick="deleteTeacher(${data})"
-                            class="btn btn-danger btn-sm">
+                            onclick="restoreTeacher(${data})"
+                            class="btn btn-success btn-sm">
 
-                            <i class="bi bi-trash-fill"></i>
+                            <i class="bi bi-arrow-clockwise"></i>
 
                         </button>
-
                     `;
                 }
+
+                let editUrl =
+                    "{{ route('teachers.edit', ':id') }}";
+
+                editUrl =
+                    editUrl.replace(':id', data);
+
+                return `
+
+                    <a href="${editUrl}"
+                        class="btn btn-warning btn-sm">
+
+                        <i class="bi bi-pencil-fill"></i>
+
+                    </a>
+
+                    <button
+                        onclick="deleteTeacher(${data})"
+                        class="btn btn-danger btn-sm">
+
+                        <i class="bi bi-trash-fill"></i>
+
+                    </button>
+
+                `;
             }
+        }
 
-        ]
+    ]
 
-    });
-
-
+});
 
 
 

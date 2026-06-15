@@ -11,28 +11,73 @@ class TeacherDetail extends Model
 
     protected $fillable = [
 
-        'user_id',
-        'employee_id',
-        'phone',
-        'alternate_phone',
-        'gender',
-        'dob',
-        'qualification',
-        'experience',
-        'joining_date',
-        'salary',
-        'blood_group',
-        'aadhaar_no',
-        'address',
-        'city',
-        'state',
-        'pincode',
-        'photo',
-        'status'
-    ];
+    'user_id',
+    'employee_id',
+    'department_id',
+    'designation_id',
+    'employment_type',
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    'phone',
+    'alternate_phone',
+    'email',
+
+    'gender',
+    'dob',
+    'blood_group',
+
+    'qualification',
+    'highest_degree',
+    'specialization',
+    'university',
+
+    'experience',
+    'industry_experience',
+    'previous_college',
+
+    'joining_date',
+    'salary',
+
+    'aadhaar_no',
+    'pan_no',
+
+    'bank_name',
+    'account_no',
+    'ifsc_code',
+
+    'emergency_contact_name',
+    'emergency_contact_phone',
+    'relationship',
+
+    'address',
+    'city',
+    'state',
+    'pincode',
+
+    'photo',
+    'resume',
+
+    'biometric_id',
+    'rfid_no',
+
+    'status'
+];
+
+   public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
+public function department()
+{
+    return $this->belongsTo(
+        Department::class
+    );
+}
+
+public function designation()
+{
+    return $this->belongsTo(
+        Designation::class
+    );
+}
 }

@@ -6,36 +6,64 @@ use App\Http\Controllers\Controller;
 use App\Models\TeacherDetail;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Department;
+use App\Models\Designation;
 use App\Models\Subject;
 use Yajra\DataTables\Facades\DataTables;
 
 class TeacherController extends Controller
 {
     public function index()
-    {
-        $teachers = User::with('teacherDetail')
-            ->where('role', 'teacher')
-            ->get();
+{
+    // dd("hi");
 
-        return view('admin.teachers.index', compact('teachers'));
-    }
+    $teachers = TeacherDetail::with([
+        'user',
+        'department',
+        'designation'
+    ])
+    ->latest()
+    ->get();
 
-    public function create()
-    {
-        return view('admin.teachers.create');
-    }
+    return view(
+        'admin.teachers.index',
+        compact('teachers')
+    );
+}
+
+
+public function create()
+{
+    //    dd("hi");
+    $departments = Department::where('status',1)
+                    ->orderBy('name')
+                    ->get();
+
+    $designations = Designation::where('status',1)
+                    ->orderBy('name')
+                    ->get();
+
+    return view('admin.teachers.create', compact(
+        'departments',
+        'designations'
+    ));
+}
 
     public function store(Request $request)
     {
+        // dd($request);
         $request->validate([
 
             'name' => 'required|max:100',
 
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
 
             'employee_id' =>
-            'required|unique:teacher_details',
+            'required|unique:teacher_details,employee_id',
 
+            'department_id' => 'required|exists:departments,id',
+
+            'designation_id' => 'required|exists:designations,id',      
             'phone' =>
             'required|digits:10',
 
@@ -72,6 +100,11 @@ class TeacherController extends Controller
             'employee_id' => $request->employee_id,
 
             'phone' => $request->phone,
+            'department_id' => $request->department_id,
+
+            'designation_id' => $request->designation_id,
+
+            'employment_type' => $request->employment_type,
 
             'alternate_phone' =>
             $request->alternate_phone,
@@ -123,55 +156,107 @@ class TeacherController extends Controller
 
     // TeacherController.php
 
-   public function edit($id)
+  public function edit($id)
 {
-    $teacher = TeacherDetail::with('user')
-        ->findOrFail($id);
+    $teacher = TeacherDetail::with([
+        'user',
+        'department',
+        'designation'
+    ])->findOrFail($id);
+
+    $departments = Department::where('status',1)->get();
+
+    $designations = Designation::where('status',1)->get();
 
     return view(
         'admin.teachers.edit',
-        compact('teacher')
+        compact(
+            'teacher',
+            'departments',
+            'designations'
+        )
     );
 }
 
 
 
     public function update(Request $request, $id)
-    {
-        $teacher = TeacherDetail::with('user')
-            ->findOrFail($id);
+{
+    $teacher = TeacherDetail::with('user')
+        ->findOrFail($id);
 
-        $request->validate([
+   $request->validate([
 
-            'name' => 'required',
+    'name' => 'required|string|max:100',
 
-            'email' =>
-            'required|email|unique:users,email,' . $teacher->user->id,
+    'email' => 'required|email|unique:users,email,' . $teacher->user_id,
 
-            'phone' =>
-            'required|digits:10',
-        ]);
+    'phone' => 'required|digits:10',
 
+    'department_id' => 'required|exists:departments,id',
 
-        $teacher->user->update([
+    'designation_id' => 'required|exists:designations,id',
 
-            'name' => $request->name,
+    'employment_type' => 'required',
 
-            'email' => $request->email,
-        ]);
+    'gender' => 'required',
 
+    'qualification' => 'required|max:100',
 
-        $teacher->update([
+    'joining_date' => 'required|date',
 
-            'phone' => $request->phone,
-        ]);
+    'aadhaar_no' => 'nullable|digits:12',
 
+    'pincode' => 'nullable|digits:6',
 
-        return response()->json([
+    'address' => 'required|max:500',
+]);
 
-            'message' => 'Teacher Updated Successfully'
-        ]);
-    }
+    $teacher->user->update([
+
+        'name' => $request->name,
+
+        'email' => $request->email,
+    ]);
+
+   $teacher->update([
+
+    'department_id' => $request->department_id,
+
+    'designation_id' => $request->designation_id,
+
+    'employment_type' => $request->employment_type,
+
+    'phone' => $request->phone,
+
+    'alternate_phone' => $request->alternate_phone,
+
+    'gender' => $request->gender,
+
+    'qualification' => $request->qualification,
+
+    'experience' => $request->experience,
+
+    'joining_date' => $request->joining_date,
+
+    'aadhaar_no' => $request->aadhaar_no,
+
+    'city' => $request->city,
+
+    'state' => $request->state,
+
+    'pincode' => $request->pincode,
+
+    'address' => $request->address,
+]);
+
+    return response()->json([
+
+        'success' => true,
+
+        'message' => 'Teacher Updated Successfully'
+    ]);
+}
 
 
 
@@ -297,63 +382,149 @@ class TeacherController extends Controller
 
 //         ->make(true);
 // }
+// public function data(Request $request)
+// {
+//     $type = $request->type ?? 'active';
+
+//     $query = TeacherDetail::with([
+
+//         'user' => function($q){
+
+//             $q->withTrashed();
+//         }
+//     ]);
+
+
+
+//     if ($type == 'deleted') {
+
+//         $query = $query->onlyTrashed();
+
+//     } else {
+
+//         $query = $query->whereNull('deleted_at');
+//     }
+
+
+
+//     return DataTables::of($query)
+
+//         ->addColumn('name', function ($row) {
+
+//             return optional($row->user)->name;
+//         })
+
+//         ->addColumn('email', function ($row) {
+
+//             return optional($row->user)->email;
+//         })
+
+//         ->addColumn('phone', function ($row) {
+
+//             return $row->phone;
+//         })
+
+//         ->addColumn('qualification', function ($row) {
+
+//             return $row->qualification;
+//         })
+
+//         ->addColumn('status', function ($row) {
+
+//             return $row->status;
+//         })
+
+//         ->addColumn('id', function ($row) {
+
+//             return $row->id;
+//         })
+
+//         ->make(true);
+// }
 public function data(Request $request)
 {
     $type = $request->type ?? 'active';
 
     $query = TeacherDetail::with([
-
-        'user' => function($q){
-
-            $q->withTrashed();
-        }
+        'user' => fn($q) => $q->withTrashed(),
+        'department',
+        'designation'
     ]);
 
-
-
-    if ($type == 'deleted') {
-
-        $query = $query->onlyTrashed();
-
+    if ($type === 'deleted') {
+        $query->onlyTrashed();
     } else {
-
-        $query = $query->whereNull('deleted_at');
+        $query->whereNull('deleted_at');
     }
-
-
 
     return DataTables::of($query)
 
-        ->addColumn('name', function ($row) {
+        ->addColumn('name', fn($row) =>
+            optional($row->user)->name
+        )
 
-            return optional($row->user)->name;
+        ->addColumn('email', fn($row) =>
+            optional($row->user)->email
+        )
+
+        ->addColumn('department', fn($row) =>
+            optional($row->department)->name ?? '-'
+        )
+
+        ->addColumn('designation', fn($row) =>
+            optional($row->designation)->name ?? '-'
+        )
+
+        ->addColumn('phone', fn($row) =>
+            $row->phone
+        )
+
+        ->addColumn('joining_date', fn($row) =>
+            $row->joining_date
+                ? \Carbon\Carbon::parse($row->joining_date)
+                    ->format('d-m-Y')
+                : '-'
+        )
+
+        ->addColumn('status', function ($row) use ($type) {
+
+            if ($type == 'deleted') {
+                return '<span class="badge bg-danger">Deleted</span>';
+            }
+
+            return '<span class="badge bg-success">Active</span>';
         })
 
-        ->addColumn('email', function ($row) {
+        ->addColumn('action', function ($row) use ($type) {
 
-            return optional($row->user)->email;
+            if ($type == 'deleted') {
+
+                return '
+                    <button
+                        onclick="restoreTeacher('.$row->id.')"
+                        class="btn btn-success btn-sm">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                ';
+            }
+
+            $editUrl = route('teachers.edit', $row->id);
+
+            return '
+                <a href="'.$editUrl.'"
+                    class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil-fill"></i>
+                </a>
+
+                <button
+                    onclick="deleteTeacher('.$row->id.')"
+                    class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+            ';
         })
 
-        ->addColumn('phone', function ($row) {
-
-            return $row->phone;
-        })
-
-        ->addColumn('qualification', function ($row) {
-
-            return $row->qualification;
-        })
-
-        ->addColumn('status', function ($row) {
-
-            return $row->status;
-        })
-
-        ->addColumn('id', function ($row) {
-
-            return $row->id;
-        })
-
+        ->rawColumns(['status', 'action'])
         ->make(true);
 }
    public function restore($id)
