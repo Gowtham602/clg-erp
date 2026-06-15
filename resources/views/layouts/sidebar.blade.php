@@ -110,6 +110,14 @@
             Teachers
         </a>
 
+            <!-- //Exams  -->
+         <!-- Exams -->
+        <a href="{{ route('exams.index') }}"
+        class="sidebar-link {{ request()->routeIs('exams.*') ? 'active' : '' }}">
+
+            <i class="bi bi-file-earmark-text me-2"></i>
+            Exams
+        </a>
 
         <!-- PROMOTION -->
         <!-- <a href="{{ route('promotion.index') }}"
@@ -118,12 +126,12 @@
             <i class="bi bi-arrow-up-circle me-2"></i>
             Promotion
         </a> -->
-        <a href="{{ route('student.promotions.index') }}"
+        <!-- <a href="{{ route('student.promotions.index') }}"
             class="sidebar-link {{ request()->routeIs('promotion.*') ? 'active' : '' }}">
 
             <i class="bi bi-arrow-up-circle me-2"></i>
             Promotion
-        </a>
+        </a> -->
 
         @endif
 

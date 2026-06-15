@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\ExamController;
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -140,18 +141,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/promotion', [PromotionController::class, 'index'])->name('promotion.index');
     Route::post('/admin/promotion', [PromotionController::class, 'promote'])->name('promotion.store');
 
+    //for exams controller
+    Route::resource('exams', ExamController::class);
+    Route::get('/get-semesters/{class}',[ExamController::class,'getSemestersExam'])->name('get.semesters');
 
-//     Route::get('student-promotions',
-//     [StudentPromotionController::class, 'index'])
-//     ->name('student.promotions.index');
-
-// Route::post('student-promotions/get-students',
-//     [StudentPromotionController::class, 'getStudents'])
-//     ->name('student.promotions.getStudents');
-
-// Route::post('student-promotions/promote',
-//     [StudentPromotionController::class, 'promote'])
-//     ->name('student.promotions.promote');
  Route::get(
         'student-promotions',
         [StudentPromotionController::class, 'index']
@@ -172,62 +165,3 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     [StudentPromotionController::class,'getSections']
 );
 });
-
-// Route::controller(PromotionController::class)
-//     ->prefix('promotions')
-//     ->name('promotions.')
-//     ->group(function () {
-
-//         Route::get('/', 'index')
-//             ->name('index');
-
-//         Route::post('/get-students', 'getStudents')
-//             ->name('getStudents');
-
-//         Route::post('/promote', 'promote')
-//             ->name('promote');
-//     });
-
-// // use App\Http\Controllers\Admin\TeacherController;
-// Route::prefix('admin')->middleware(['auth'])->group(function () {
-
-//     // Student CRUD
-//     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
-
-//     Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
-
-//     Route::post('/students/store', [StudentController::class, 'store'])->name('students.store');
-
-//     Route::get('/students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
-
-//     Route::put('/students/{id}', [StudentController::class, 'update'])->name('students.update');
-
-//     Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
-
-//     // DataTable
-//     Route::get('/students-data', [StudentController::class, 'data'])->name('students.data');
-
-
-
-//     // dashboard
-//     Route::get('/dashboard', [DashboardController::class, 'index'])
-//     ->name('admin.dashboard');
-// });
-   
-// Route::prefix('admin')->middleware(['auth'])->group(function () {
-//     Route::get('/teachers', [TeacherController::class, 'index']);
-//     Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
-    
-//     Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
-
-//     Route::post('/teachers/store', [TeacherController::class, 'store'])->name('teachers.store');
-
-//     Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teachers.delete');
-
-//     Route::get('/teachers/data', [TeacherController::class, 'data'])->name('teachers.data');
-
-
-//     // class 
-//     Route::resource('classes', ClassController::class);
-//     Route::get('classes-data', [ClassController::class, 'data'])->name('classes.data');
-// });
