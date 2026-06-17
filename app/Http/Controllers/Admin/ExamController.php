@@ -101,12 +101,9 @@ public function create()
         ->orderBy('name')
         ->get();
 
-   $semesters = Semester::where(
-    'course_id',
-    $exam->class_id
-)
-->where('status',1)
-->get();
+   $semesters = Semester::where('course_id',$exam->class_id)
+        ->where('status',1)
+        ->get();
 
     return view(
         'admin.exams.edit',

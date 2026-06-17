@@ -38,6 +38,18 @@ class Student extends Model
         'created_by',
         'updated_by'
     ];
+      public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function academic()
+{
+    return $this->hasOne(
+        StudentAcademic::class,
+        'student_id',
+        'id'
+    );
+}
 
     // Relation: Student → Class
     public function class()

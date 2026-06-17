@@ -18,4 +18,11 @@ class Exams extends Model
         'end_date',
         'status'
     ];
+    public function schedules()
+{
+    return $this->hasMany(
+        ExamSchedule::class,
+        'exam_id'
+    );
+}
 }

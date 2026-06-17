@@ -4,7 +4,6 @@
 
 <div class="container-fluid">
 
-```
 <div class="card shadow border-0">
 
     <div class="card-header bg-warning d-flex justify-content-between align-items-center">
@@ -204,7 +203,6 @@
     </div>
 
 </div>
-```
 
 </div>
 

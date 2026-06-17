@@ -213,12 +213,12 @@
 
                                 </a>
 
-                                <button
+                                <!-- <button
                                     class="btn btn-sm btn-outline-danger">
 
                                     <i class="bi bi-trash"></i>
 
-                                </button>
+                                </button> -->
 
                             </td>
 

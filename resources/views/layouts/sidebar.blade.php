@@ -111,13 +111,58 @@
         </a>
 
             <!-- //Exams  -->
-         <!-- Exams -->
-        <a href="{{ route('exams.index') }}"
-        class="sidebar-link {{ request()->routeIs('exams.*') ? 'active' : '' }}">
+      <hr class="border-light opacity-25">
 
-            <i class="bi bi-file-earmark-text me-2"></i>
-            Exams
-        </a>
+<p class="text-white-50 small mb-2 mt-3 fw-bold">
+    EXAMINATION
+</p>
+
+<a href="{{ route('exams.index') }}"
+   class="sidebar-link {{ request()->routeIs('exams.*') ? 'active' : '' }}">
+
+    <i class="bi bi-journal-check me-2"></i>
+
+    Exam Master
+
+</a>
+
+<a href="{{ route('exam-schedules.index') }}"
+   class="sidebar-link {{ request()->routeIs('exam-schedules.*') ? 'active' : '' }}">
+
+    <i class="bi bi-calendar-event me-2"></i>
+
+    Exam Schedule
+
+</a>
+
+<!-- Hall Tickets -->
+<a href="{{ route('hall-tickets.index') }}"
+   class="sidebar-link {{ request()->routeIs('hall-tickets.*') ? 'active' : '' }}">
+    <i class="bi bi-file-earmark-text me-2"></i>
+    Hall Tickets
+</a>
+
+<a href="#"
+   class="sidebar-link">
+
+    <i class="bi bi-pencil-square me-2"></i>
+
+    Marks Entry
+
+</a>
+
+<a href="#"
+   class="sidebar-link">
+
+    <i class="bi bi-award me-2"></i>
+
+    Results
+
+</a>
+
+
+
+
 
         <!-- PROMOTION -->
         <!-- <a href="{{ route('promotion.index') }}"

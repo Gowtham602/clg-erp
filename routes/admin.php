@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\AcademicYearController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\ExamController;
+use App\Http\Controllers\Admin\ExamScheduleController;
+use App\Http\Controllers\Admin\HallTicketController;
 
 Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
@@ -96,10 +98,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
 
     //academic year 
-    Route::get(
-    'get-sections/{course}',
-    [StudentController::class, 'getSections']
-)->name('students.get-sections');
+    // Route::get('get-sections/{course}',[StudentController::class, 'getSections'])->name('students.get-sections');
+    Route::get('students/get-sections/{course}',[StudentController::class, 'getSections'])->name('students.get-sections');
     Route::get('academic-years',[AcademicYearController::class, 'index'])->name('academic-years.index');
 
     Route::get('academic-years/data', [AcademicYearController::class, 'data'])->name('academic-years.data');
@@ -132,14 +132,36 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin/get-subjects/{class_id}', [SubjectTeacherController::class, 'getSubjects'])->name('get-subjects');
     Route::get('get-subjects/{class_id}',[SubjectTeacherController::class, 'getSubjects'])->name('get.subjects');
 
-    Route::get('get-sections/{class_id}', [SubjectTeacherController::class, 'getSections'] )->name('get.sections');
+    // Subject Teacher
+    Route::get('subject-teacher/get-sections/{class_id}',[SubjectTeacherController::class, 'getSections'])->name('subject-teacher.get-sections');
 
-    Route::get('admin/get-sections/{class_id}',[SubjectTeacherController::class, 'getSections'])->name('get-sections');
+    Route::get('student-promotions/get-sections/{course}',
+    [StudentPromotionController::class, 'getSections'])->name('student-promotions.get-sections');
 
 
     //students promotion to next class 
     Route::get('/admin/promotion', [PromotionController::class, 'index'])->name('promotion.index');
     Route::post('/admin/promotion', [PromotionController::class, 'promote'])->name('promotion.store');
+
+    // exam schedules 
+    Route::resource('exam-schedules',ExamScheduleController::class);
+    Route::get('/get-subjects-by-exam/{id}',[ExamScheduleController::class, 'getSubjectsByExam'])->name('get.subjects.exam');
+    Route::get('/get-subjects/{courseId}/{semesterId}',[ExamScheduleController::class,'getSubjects'])->name('exam.schedule.subjects');
+
+    // hall ticket  
+    Route::get('/hall-tickets', [HallTicketController::class,'index'])->name('hall-tickets.index');
+
+Route::get(
+    '/hall-ticket/{student}/{exam}',
+    [HallTicketController::class,'show']
+)->name('hall-tickets.preview');
+
+Route::get(
+    '/hall-ticket-download/{student}/{exam}',
+    [HallTicketController::class,'download']
+)->name('hall-tickets.download');
+    // Route::get('/hall-ticket/{student}/{exam}',[HallTicketController::class,'show'])->name('hallticket.show');
+    // Route::get('/hall-ticket-index/',[HallTicketController::class,'index'])->name('hall-tickets.index');
 
     //for exams controller
     Route::resource('exams', ExamController::class);
